@@ -68,7 +68,7 @@ public class CameraManager : MonoBehaviour
 
         if (enemyTarget != null)
         {
-            Vector3 yaw = enemyTarget.lockonPosition - mainCam.transform.position;// transform.position;
+            Vector3 yaw = enemyTarget.states.aem.body.position - mainCam.transform.position;// transform.position;
             yaw.y = 0;
             transform.rotation = Quaternion.RotateTowards
                 (
@@ -79,7 +79,7 @@ public class CameraManager : MonoBehaviour
             this.yaw = transform.eulerAngles.y;
 
 
-            Vector3 pitch = (enemyTarget.lockonPosition + Vector3.up * lockonPitchAdjustment) - transform.position;
+            Vector3 pitch = (enemyTarget.states.aem.body.position + Vector3.up * lockonPitchAdjustment) - (transform.position + Vector3.up);
             pitch.z = Mathf.Sqrt(Mathf.Pow(pitch.z, 2) +Mathf.Pow(pitch.x, 2));
             pitch.x = 0;
             cameraPivot.localRotation = Quaternion.RotateTowards
@@ -173,7 +173,8 @@ public class CameraManager : MonoBehaviour
             Debug.DrawLine(cameraPivot.position, points[i]);
 
             RaycastHit hitInfo;
-            if (Physics.Linecast(cameraPivot.position, points[i], out hitInfo, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 4 | 1 << 5 | 1 << 11))
+            if (Physics.Linecast(cameraPivot.position, points[i], out hitInfo,
+                1 << 0 | 1 << 1 | 1 << 2 | 1 << 4 | 1 << 5 | 1 << 11))
             {
                 if (hitInfo.distance < distance)
                 {

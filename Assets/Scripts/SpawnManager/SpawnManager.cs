@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
             GameObject enemy = ObjectPool.Instance.GetObject(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
             EnemyInput eI = enemy.GetComponent<EnemyInput>();
             eI.states.Revive();
-            eI.hostileTarget = thePlayer;
+            //eI.hostileTarget = thePlayer;
         }
     }
 

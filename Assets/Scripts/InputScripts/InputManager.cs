@@ -33,6 +33,9 @@ public class InputManager : InputParent
     bool triggerJump = false;
     bool canJump = true;
 
+    // bools for snappy lockon switching
+    bool canSwitchTarget = true;
+
     private void Start()
     {
         states.FillUpEnemyTarget += States_FillUpEnemyTarget;
@@ -231,19 +234,33 @@ public class InputManager : InputParent
         if (states.lockon)
         {
             float mouseSpeedBump = 1.75f;
+
+            if (!canSwitchTarget) return;
+
             if (Input.GetAxis("Mouse X") < -mouseSpeedBump)//(Input.GetKeyDown(KeyCode.Q))
             {
                 GetNextTarget("left");
             }
             if (Input.GetAxis("Mouse X") > mouseSpeedBump)//(Input.GetKeyDown(KeyCode.E))
-            {
+            {                
                 GetNextTarget("right");
             }
         }
     }
 
+    IEnumerator SnapifyChangeTarget()
+    {
+        yield return new WaitForSeconds(0.25f);
+
+        canSwitchTarget = true;
+    }
+
     void GetNextTarget(string side)
     {
+        canSwitchTarget = false;
+        StartCoroutine(SnapifyChangeTarget());
+
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, 120, 1 << 11);
         if (colliders.Length == 1)
         {
@@ -313,7 +330,7 @@ public class InputManager : InputParent
                     Vector3 to = colliders[i].transform.position - mainCam.transform.position;
                     float newAngle = Vector3.SignedAngle(mainCam.transform.forward, to, mainCam.transform.up);
 
-                    to = states.enemyTarget.lockonPosition - mainCam.transform.position;
+                    to = states.enemyTarget.transform.position - mainCam.transform.position;
                     float oldAngle = Vector3.SignedAngle(mainCam.transform.forward, to, mainCam.transform.up);
 
                     if (Mathf.Abs(newAngle) < Mathf.Abs(oldAngle))
@@ -330,13 +347,11 @@ public class InputManager : InputParent
     
     void InputLookPosition()
     {
+        float distance = 150;
         if (states.aim || states.isInAction)
         {
             Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
-            float distance = 150;
-            RaycastHit hitInfo;
-
-           
+            RaycastHit hitInfo;         
 
             if (Physics.Raycast(
                     ray, 
@@ -351,11 +366,16 @@ public class InputManager : InputParent
                 states.lookPosition = mainCam.transform.position + mainCam.transform.forward * distance;
             }
         }
+        else
+        {
+            states.lookPosition = mainCam.transform.position + mainCam.transform.forward * distance;
+        }
+        
        
-        if (states.lockon && states.enemyTarget != null)
+        /*if (states.lockon && states.enemyTarget != null)
         {
             states.lookPosition = states.enemyTarget.lockonPosition;
-        }
+        }*/
     }
 
 

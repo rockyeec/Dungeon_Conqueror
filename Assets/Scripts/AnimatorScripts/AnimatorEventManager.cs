@@ -7,14 +7,16 @@ public class AnimatorEventManager : MonoBehaviour
     public WeaponManager weapon;
     public GameObject shield;
     public Animator animator;
-    protected Transform head;
+    [HideInInspector] public Transform head;
+    [HideInInspector] public Transform body;
+
     AudioSource audioSource;
     public AudioClip audioClip;
     public StatesManager states;
 
     [HideInInspector] public int friendlyLayer = 10;
 
-    private void Awake()
+    public void Init()
     {
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
@@ -30,6 +32,7 @@ public class AnimatorEventManager : MonoBehaviour
 
         weapon.gameObject.SetActive(false);
         head = animator.GetBoneTransform(HumanBodyBones.Head);
+        body = animator.GetBoneTransform(HumanBodyBones.Chest);
         states = GetComponentInParent<StatesManager>();
     }
 

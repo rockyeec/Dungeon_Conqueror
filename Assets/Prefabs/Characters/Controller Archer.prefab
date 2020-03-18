@@ -3428,6 +3428,7 @@ MonoBehaviour:
   damage: 0
   friendlLayer: 10
   isHit: 0
+  aem: {fileID: 0}
 --- !u!1 &1698176056780315252
 GameObject:
   m_ObjectHideFlags: 0
@@ -3978,6 +3979,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 0}
   shield: {fileID: 0}
+  animator: {fileID: 0}
+  head: {fileID: 0}
+  body: {fileID: 0}
   audioClip: {fileID: 8300000, guid: d882d7356e396d34eaaea4709c12513c, type: 3}
   states: {fileID: 0}
   friendlyLayer: 10
@@ -5037,7 +5041,6 @@ GameObject:
   - component: {fileID: 6316920703542370473}
   - component: {fileID: 6316920703542370478}
   - component: {fileID: 6316920703542370479}
-  - component: {fileID: 6316920703542370476}
   - component: {fileID: 6316920703542370477}
   - component: {fileID: 6316920703542370482}
   - component: {fileID: 5140671290623351996}
@@ -5080,7 +5083,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockonYOffset: 0.8
-  lockonPosition: {x: 0, y: 0, z: 0}
   states: {fileID: 0}
   potionCounter: {fileID: 0}
 --- !u!114 &6316920703542370479
@@ -5200,14 +5202,17 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: d4807b3468c2b214888f154f73d6b60c, type: 3}
     staminaConsumption: 0
     damageMultiplier: 0
-  enemyTarget: {fileID: 0}
   maxEnemyTargetDistance: 55
-  engagedBy: {fileID: 0}
   deadBody: {fileID: 0}
+  enemyTarget: {fileID: 0}
+  lookTransform: {fileID: 0}
+  engagedBy: {fileID: 0}
   animator: {fileID: 0}
   rigidBody: {fileID: 0}
   rpg: {fileID: 0}
   dieScript: {fileID: 0}
+  capsule: {fileID: 0}
+  aem: {fileID: 0}
   vertical: 0
   horizontal: 0
   sprint: 0
@@ -5226,23 +5231,11 @@ MonoBehaviour:
   onGround: 0
   isDodge: 0
   damageMultiplier: 0
+  isWall: 0
   isInAction: 0
   isSlowMove: 0
   jumpForce: 855
---- !u!136 &6316920703542370476
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6316920703542370483}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.3
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  triggerNextLockon: 0
 --- !u!54 &6316920703542370477
 Rigidbody:
   m_ObjectHideFlags: 0

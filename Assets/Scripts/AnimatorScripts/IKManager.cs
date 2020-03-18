@@ -22,29 +22,23 @@ public class IKManager : MonoBehaviour
     {
         // IK the whole thing
         if (states.aim 
-            || (states.lockon && states.enemyTarget != null)
             || animator.GetBool("stillAiming"))
         {
-            Vector3 hor = states.lookPosition - transform.position;
-            hor.y = 0;
-            hor = hor.normalized;
-            states.transform.rotation = Quaternion.Slerp(states.transform.rotation, Quaternion.LookRotation(hor), Time.deltaTime * 8.5f);
-            animator.SetLookAtWeight(1, 0.85f, 0.15f);
-
-            if (states.lockon && states.enemyTarget != null)
-            {
-                animator.SetLookAtPosition(states.lookPosition + Vector3.up * 1.2f);
-            }
-            else
-            {
-                animator.SetLookAtPosition(states.lookPosition);
-            }
+            BendWaistAccordingTo(states.lookPosition);
+            return;
         }
-        else if (states.isInAction && !states.isDodge) // Only IK pitch angle! NOT cardinal facing
+
+        if (states.lockon)
+        {
+            BendWaistAccordingTo(states.lookTransform.position);
+            return;
+        }
+
+        if (states.isInAction && !states.isDodge) // Only IK pitch angle! NOT cardinal facing
         {
             if (states.lockon && states.enemyTarget != null)
             {
-                animator.SetLookAtPosition(states.lookPosition + Vector3.up * 1.2f);
+                animator.SetLookAtPosition(states.lookTransform.position);
             }
             else
             {
@@ -59,6 +53,17 @@ public class IKManager : MonoBehaviour
         }        
     }
 
+    void BendWaistAccordingTo(Vector3 position)
+    {
+        Vector3 hor = position - transform.position;
+        hor.y = 0;
+        hor = hor.normalized;
+        states.transform.rotation = Quaternion.Slerp(states.transform.rotation, Quaternion.LookRotation(hor), Time.deltaTime * 8.5f);
 
+        animator.SetLookAtWeight(1, 0.85f, 0.15f);
+
+        animator.SetLookAtPosition(position);
+        
+    }
 
 }

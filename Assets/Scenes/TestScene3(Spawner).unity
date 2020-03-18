@@ -17477,7 +17477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31153c5f18973db4db7f6b2b25669e3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterClass: 0
+  characterClass: 1
   enemyGroupSpawners:
   - enemySpawners:
     - enemyPrefab: Enemy_Warrior(Clone)

@@ -10,7 +10,7 @@ public class EnemyInput : InputParent
     float fixedDelta;
 
     
-    public InputManager hostileTarget;
+    //public InputManager hostileTarget;
     public float stopDistance = 1.55f;
     public float backOffDistance = 0.88f;
 
@@ -22,24 +22,20 @@ public class EnemyInput : InputParent
 
     
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         GetComponentInChildren<AnimatorEventManager>().friendlyLayer = 11;
 
-        states.FillUpEnemyTarget += States_FillUpEnemyTarget;
-        states.EmptyEnemyTarget += States_EmptyEnemyTarget;
+        states.OnRevive += States_OnRevive;
+        //Debug.Log("i'm subscribed baybeh!");
     }
 
-    private void States_EmptyEnemyTarget()
+
+    private void States_OnRevive()
     {
+        //Debug.Log("waddup, they revived me yo!");
         StartCoroutine(LookOutForGoodGuys());
-    }
-
-    private void States_FillUpEnemyTarget(InputParent obj)
-    {
-
-        Debug.Log("AHA!");
-        StopCoroutine(LookOutForGoodGuys());
     }
 
     private void Update()
@@ -54,7 +50,6 @@ public class EnemyInput : InputParent
     {
         fixedDelta = Time.fixedDeltaTime;
         states.FixedTick(fixedDelta);
-        UpdateLockonPosition();
     }
 
     private void GetInput()
@@ -62,43 +57,33 @@ public class EnemyInput : InputParent
         if (states.triggerNextLockon)
         {
             states.triggerNextLockon = false;
+            BreakAggro();
             StartCoroutine(LookOutForGoodGuys());
         }
+        
 
+        if (!states.lockon) return;
 
-        states.aim = states.lockon;
-
-        /*if (hostileTarget != null)
-        {
-            DoAggro();
-        }
-        else
-        {
-            DoPatrol();
-        }*/
-    }
-
-
-    void DoPatrol()
-    {
+        AggroGoodGuy();
         
     }
 
 
+
+
+
+
     IEnumerator LookOutForGoodGuys()
     {
-        Debug.Log("YO! i Coroutined");
-        while (true)
+        //Debug.Log("YO! i Coroutined");
+        states.lookPosition = states.aem.head.position + transform.forward;
+        while (!states.lockon)
         {
             yield return new WaitForSeconds(0.45f);
 
             GetEnemyTarget();
         }
     }
-
-
-
-
 
     void GetEnemyTarget()
     {
@@ -110,14 +95,15 @@ public class EnemyInput : InputParent
 
         for (int i = 0; i < colliders.Length; i++)
         {
+            float height = 0.5f;
+            if (Physics.Linecast(transform.position + Vector3.up * height,
+                    colliders[i].transform.position + Vector3.up * height))
+                continue;
+
             InputManager enemy = colliders[i].GetComponent<InputManager>();
 
             if (enemy != null)
             {
-                if (Physics.Linecast(transform.position + Vector3.up,
-                    colliders[i].transform.position + Vector3.up))
-                    continue;
-
                 if (states.enemyTarget == null)
                 {
                     states.LockonOn(enemy);
@@ -127,7 +113,7 @@ public class EnemyInput : InputParent
                     Vector3 to = colliders[i].transform.position - transform.position;
                     float newAngle = Vector3.SignedAngle(transform.forward, to, transform.up);
 
-                    to = states.enemyTarget.lockonPosition - transform.position;
+                    to = states.enemyTarget.transform.position - transform.position;
                     float oldAngle = Vector3.SignedAngle(transform.forward, to, transform.up);
 
                     if (Mathf.Abs(newAngle) < Mathf.Abs(oldAngle))
@@ -141,9 +127,56 @@ public class EnemyInput : InputParent
         }
     }
 
+    void AggroGoodGuy()
+    {
+        Vector3 heading = states.enemyTarget.transform.position - transform.position;
+
+        // cancel pitching
+        heading.y = 0;
+
+        float curDistance = heading.magnitude;
+        heading = heading.normalized;
+
+        AggroMove(curDistance, heading);
+
+        HandleAttack(curDistance);
+    }
+
+    void AggroMove(float curDistance, Vector3 heading)
+    {
+        if (curDistance > stopDistance)
+        {
+            // move towards
+            SmoothTowards(ref states.vertical, 1);
+        }
+        else if (
+            curDistance < backOffDistance
+            && !states.isInAction
+            )
+        {
+            // back off
+            SmoothTowards(ref states.vertical, -1);
+        }
+        else
+        {
+            // don't move
+            SmoothTowards(ref states.vertical, 0);
+        }
+
+        // assign move direction
+        Vector3 hor = heading.normalized;
+        hor.y = hor.z;
+        hor.z = hor.x;
+        hor.x = hor.y;
+        hor.y = 0; // lazy man's swap algorithm
+        hor *= states.horizontal;
+        Vector3 ver = heading.normalized * states.vertical;
+        states.moveDirection = (hor + ver).normalized;
 
 
-
+        // perform movement
+        states.moveAmount = Mathf.Clamp01(Mathf.Abs(states.horizontal) + Mathf.Abs(states.vertical));
+    }
 
 
 
@@ -161,7 +194,7 @@ public class EnemyInput : InputParent
         states.aim = false;
     }
 
-    private void DoAggro()
+    /*private void DoAggro()
     {
         if (hostileTarget == null)
         {
@@ -176,7 +209,7 @@ public class EnemyInput : InputParent
             return;
         }
         
-        states.lookPosition = hostileTarget.transform.position + Vector3.up * 1.2f;
+        //states.lookPosition = hostileTarget.transform.position + Vector3.up * 1.2f;
 
         Vector3 heading = hostileTarget.transform.position - transform.position;
 
@@ -193,7 +226,7 @@ public class EnemyInput : InputParent
         HandleMovement(curDistance, heading);
 
         HandleAttack(curDistance);
-    }
+    }*/
 
     void ResetInputs()
     {
@@ -231,7 +264,7 @@ public class EnemyInput : InputParent
         hor.y = hor.z;
         hor.z = hor.x;
         hor.x = hor.y;
-        hor.y = 0;
+        hor.y = 0; // lazy man's swap algorithm
         hor *= states.horizontal;
         Vector3 ver = heading.normalized * states.vertical;
         states.moveDirection = (hor + ver).normalized;

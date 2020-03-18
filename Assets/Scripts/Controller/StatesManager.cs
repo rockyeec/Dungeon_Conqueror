@@ -40,10 +40,14 @@ public class StatesManager : MonoBehaviour
     public ActionWithCurve drinkPotion;
 
     [Header("Test Attributes (Temporary)")]
-    public InputParent enemyTarget;
     public float maxEnemyTargetDistance = 10;
-    [HideInInspector] public StatesManager engagedBy;
-    public GameObject deadBody;
+
+    // Lockon Attributes
+    [HideInInspector] public GameObject deadBody;
+    [HideInInspector] public InputParent enemyTarget;
+    [HideInInspector] public Transform lookTransform;
+    //[HideInInspector] public StatesManager engagedBy;
+    
 
 
     // Components
@@ -53,6 +57,7 @@ public class StatesManager : MonoBehaviour
     [HideInInspector] public RPGManager rpg;
     [HideInInspector] public DieScript dieScript;
     [HideInInspector] public CapsuleCollider capsule;
+    [HideInInspector] public AnimatorEventManager aem;
 
     // Input
     [HideInInspector] public float vertical;
@@ -109,8 +114,13 @@ public class StatesManager : MonoBehaviour
     [HideInInspector] public bool triggerNextLockon = false;
 
 
+    // Death Bool
+    [HideInInspector] public bool isDead = false;
 
-    // Event
+
+    // Events
+
+    public event Action OnRevive = delegate { };
 
     public event Action<InputParent> FillUpEnemyTarget = delegate { };
 
@@ -141,14 +151,26 @@ public class StatesManager : MonoBehaviour
         EmptyEnemyTarget();
     }
 
+    public void Revive()
+    {
+        isDead = false;
+        rpg.health.Reset();
+        rpg.stamina.Reset();
+        deadBody.GetComponent<DieScript>().enabled = false;
+        deadBody.SetActive(false);
+        animator.gameObject.SetActive(true);
+        rigidBody.useGravity = true;
+        capsule.enabled = true;
+        GetComponent<InputParent>().enabled = true;
+        OnRevive();
+    }
+
 
     // Main Functions
     public void Init()
     {
         rpg = GetComponent<RPGManager>();
-        animator = GetComponentInChildren<AnimatorEventManager>().GetComponent<Animator>();
         rigidBody = GetComponent<Rigidbody>();
-
         audioSource = GetComponent<AudioSource>();
 
         dieScript = GetComponentInChildren<DieScript>();
@@ -157,6 +179,10 @@ public class StatesManager : MonoBehaviour
         rpg.Init();
 
         capsule = GetComponent<CapsuleCollider>();
+
+        aem = GetComponentInChildren<AnimatorEventManager>();
+        aem.Init();
+        animator = aem.animator;
 
 
         FillUpEnemyTarget += StatesManager_FillUpEnemyTarget;
@@ -223,6 +249,36 @@ public class StatesManager : MonoBehaviour
 
     // Sub Functions
     #region Sub Functions
+    
+    void HandleDeath()
+    {
+
+        if (rpg.health.GetPercentage() <= 0)
+        {
+            isDead = true;
+
+            /*if (engagedBy != null)
+            {
+                StatesManager temp = engagedBy;
+                engagedBy.LockOff();
+               // temp.triggerNextLockon = true; // to be turned off by respective input manager
+            }*/
+
+            deadBody.SetActive(true);
+            deadBody.GetComponent<DieScript>().enabled = true;
+            animator.gameObject.SetActive(false);
+
+            rigidBody.velocity = Vector3.zero;
+            //rigidBody.drag = 4;
+
+            UpdateOnGround();
+            rigidBody.useGravity = false;
+            capsule.enabled = false;
+            GetComponent<InputParent>().enabled = false;
+            LockOff();
+            //Debug.Log("death to do list gao dim!");
+        }
+    }
 
     
     void SettleCooldowns()
@@ -231,6 +287,7 @@ public class StatesManager : MonoBehaviour
         CoolDownSlowMoveAction();
     }
 
+    
     void HandleJump()
     {
         if (!isJump && onGround && jump
@@ -262,48 +319,6 @@ public class StatesManager : MonoBehaviour
         }
     }
 
-    void HandleDeath()
-    {
-
-        if (rpg.health.GetPercentage() <= 0)
-        {
-
-            if (engagedBy != null)
-            {
-                StatesManager temp = engagedBy;
-                engagedBy.LockOff();
-                temp.triggerNextLockon = true; // to be turned off by respective input manager
-                /*engagedBy.lockon = false;
-                engagedBy = null;*/
-            }
-
-            deadBody.SetActive(true);
-            deadBody.GetComponent<DieScript>().enabled = true;
-            animator.gameObject.SetActive(false);
-
-            rigidBody.velocity = Vector3.zero;
-            rigidBody.drag = 4;
-
-            UpdateOnGround();
-            rigidBody.useGravity = false;
-            capsule.enabled = false;
-            GetComponent<InputParent>().enabled = false;
-            LockOff();
-        }
-    }
-
-    public void Revive()
-    {
-        rpg.health.Reset();
-        rpg.stamina.Reset();
-        deadBody.GetComponent<DieScript>().enabled = false;
-        deadBody.SetActive(false);
-        animator.gameObject.SetActive(true);
-        rigidBody.useGravity = true;
-        capsule.enabled = true;
-        GetComponent<InputParent>().enabled = true;
-        LockOff();
-    }
 
     void UpdateOnGround()
     {
@@ -380,28 +395,39 @@ public class StatesManager : MonoBehaviour
     {
         lockon = false;
         if (enemyTarget == null) return;
-        enemyTarget.states.engagedBy = null;
+        //enemyTarget.states.engagedBy = null;
+        
+
         enemyTarget = null;
+        lookTransform = null;
     }
 
     private void StatesManager_FillUpEnemyTarget(InputParent enemy)
     {
         lockon = true;
         enemyTarget = enemy;
-        enemy.states.engagedBy = this;
+        //enemy.states.engagedBy = this;
+        lookTransform = enemyTarget.states.aem.body;
     }
 
 
     void HandleLockon()
     {
-        if (enemyTarget != null)
+        if (enemyTarget == null) return;
+
+        
+        float enemyTargetDistance = Vector3.Distance(enemyTarget.transform.position, transform.position);
+        if (enemyTargetDistance > maxEnemyTargetDistance)
         {
-            float enemyTargetDistance = Vector3.Distance(enemyTarget.transform.position, transform.position);
-            if (enemyTargetDistance > maxEnemyTargetDistance)
-            {
-                LockOff();
-            }
+            LockOff();
         }
+
+        if (enemyTarget.states.isDead)
+        {
+            LockOff();
+            triggerNextLockon = true;
+        }
+        
     }
 
     void HandleMovement()

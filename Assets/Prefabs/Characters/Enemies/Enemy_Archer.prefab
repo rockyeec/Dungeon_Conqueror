@@ -4159,6 +4159,8 @@ MonoBehaviour:
   weapon: {fileID: 0}
   shield: {fileID: 0}
   animator: {fileID: 0}
+  head: {fileID: 0}
+  body: {fileID: 0}
   audioClip: {fileID: 8300000, guid: d882d7356e396d34eaaea4709c12513c, type: 3}
   states: {fileID: 0}
   friendlyLayer: 10
@@ -5561,15 +5563,16 @@ MonoBehaviour:
     audioClip: {fileID: 0}
     staminaConsumption: -15
     damageMultiplier: 0
-  enemyTarget: {fileID: 0}
   maxEnemyTargetDistance: 55
-  engagedBy: {fileID: 0}
   deadBody: {fileID: 0}
+  enemyTarget: {fileID: 0}
+  lookTransform: {fileID: 0}
   animator: {fileID: 0}
   rigidBody: {fileID: 0}
   rpg: {fileID: 0}
   dieScript: {fileID: 0}
   capsule: {fileID: 0}
+  aem: {fileID: 0}
   vertical: 0
   horizontal: 0
   sprint: 0
@@ -5592,6 +5595,8 @@ MonoBehaviour:
   isInAction: 0
   isSlowMove: 0
   jumpForce: 855
+  triggerNextLockon: 0
+  isDead: 0
 --- !u!136 &6316920703542370476
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5602,8 +5607,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.4
-  m_Height: 1
+  m_Radius: 0.45
+  m_Height: 1.2
   m_Direction: 1
   m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!54 &6316920703542370477
@@ -5763,9 +5768,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockonYOffset: 0.15
-  lockonPosition: {x: 0, y: 0, z: 0}
+  lockonDist: 25
   states: {fileID: 0}
-  hostileTarget: {fileID: 0}
   stopDistance: 35
   backOffDistance: 1.4
 --- !u!1 &6379253414781533449

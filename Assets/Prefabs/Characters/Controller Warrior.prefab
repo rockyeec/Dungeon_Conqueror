@@ -234,6 +234,7 @@ MonoBehaviour:
   damage: 25
   friendlLayer: 10
   isHit: 0
+  aem: {fileID: 0}
 --- !u!82 &1454121166
 AudioSource:
   m_ObjectHideFlags: 0
@@ -344,6 +345,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 0}
   shield: {fileID: 0}
+  animator: {fileID: 0}
+  head: {fileID: 0}
+  body: {fileID: 0}
   audioClip: {fileID: 8300000, guid: d882d7356e396d34eaaea4709c12513c, type: 3}
   states: {fileID: 0}
   friendlyLayer: 10
@@ -419,6 +423,7 @@ MonoBehaviour:
   damage: 25
   friendlLayer: 10
   isHit: 0
+  aem: {fileID: 0}
 --- !u!1 &7267377329408536599
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockonYOffset: 0.8
-  lockonPosition: {x: 0, y: 0, z: 0}
+  lockonDist: 35
   states: {fileID: 0}
   potionCounter: {fileID: 0}
 --- !u!114 &7267377330263380792
@@ -733,14 +738,16 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: d4807b3468c2b214888f154f73d6b60c, type: 3}
     staminaConsumption: 0
     damageMultiplier: 0
-  enemyTarget: {fileID: 0}
   maxEnemyTargetDistance: 55
-  engagedBy: {fileID: 0}
   deadBody: {fileID: 8296172669066433658}
+  enemyTarget: {fileID: 0}
+  lookTransform: {fileID: 0}
   animator: {fileID: 5704475378241311922}
   rigidBody: {fileID: 7267377330263380788}
   rpg: {fileID: -6130898945944234228}
   dieScript: {fileID: 0}
+  capsule: {fileID: 0}
+  aem: {fileID: 0}
   vertical: 0
   horizontal: 0
   sprint: 0
@@ -759,9 +766,12 @@ MonoBehaviour:
   onGround: 1
   isDodge: 0
   damageMultiplier: 3
+  isWall: 0
   isInAction: 0
   isSlowMove: 0
   jumpForce: 855
+  triggerNextLockon: 0
+  isDead: 0
 --- !u!136 &7267377330263380791
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -772,8 +782,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.4
-  m_Height: 1
+  m_Radius: 0.45
+  m_Height: 1.2
   m_Direction: 1
   m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!54 &7267377330263380788

@@ -75,7 +75,7 @@ public class EnemyInput : InputParent
 
     IEnumerator LookOutForGoodGuys()
     {
-        //Debug.Log("YO! i Coroutined");
+        Debug.Log("YO! i Coroutined");
         states.lookPosition = states.aem.head.position + transform.forward;
         while (!states.lockon)
         {
@@ -87,7 +87,7 @@ public class EnemyInput : InputParent
 
     void GetEnemyTarget()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 120, 1 << 10);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, lockonDist, 1 << 10);
         if (colliders.Length == 0)
         {
             return;
@@ -95,15 +95,22 @@ public class EnemyInput : InputParent
 
         for (int i = 0; i < colliders.Length; i++)
         {
-            float height = 0.5f;
-            if (Physics.Linecast(transform.position + Vector3.up * height,
-                    colliders[i].transform.position + Vector3.up * height))
-                continue;
 
             InputManager enemy = colliders[i].GetComponent<InputManager>();
 
             if (enemy != null)
             {
+                Debug.DrawLine(states.aem.head.position,
+                        enemy.states.aem.body.position - states.aem.body.forward * (enemy.states.capsule.radius + 0.05f));
+                if (Physics.Linecast(states.aem.body.position,
+                        enemy.states.aem.body.position - states.aem.body.forward * (enemy.states.capsule.radius + 0.05f),
+                        1 << 0 | 1 << 10 | 1 << 11
+                   ))
+                    continue;
+                             
+                Debug.Log("AHA!");
+                
+                
                 if (states.enemyTarget == null)
                 {
                     states.LockonOn(enemy);
@@ -194,84 +201,11 @@ public class EnemyInput : InputParent
         states.aim = false;
     }
 
-    /*private void DoAggro()
-    {
-        if (hostileTarget == null)
-        {
-            BreakAggro();
-            return;
-        }
-
-        if (!hostileTarget.enabled)
-        {
-            BreakAggro();
-            hostileTarget = null;
-            return;
-        }
-        
-        //states.lookPosition = hostileTarget.transform.position + Vector3.up * 1.2f;
-
-        Vector3 heading = hostileTarget.transform.position - transform.position;
-
-        // jump
-        states.jump = (heading.y >= 0.5f);        
-
-        // cancel pitching
-        heading.y = 0;
-
-        // movement
-        float curDistance = heading.magnitude;
-        states.aim = isAttack;// (curDistance < backOffDistance * 2f);
-
-        HandleMovement(curDistance, heading);
-
-        HandleAttack(curDistance);
-    }*/
-
     void ResetInputs()
     {
         states.fire3 = false;
         states.fire2 = false;
         states.dodge = false;
-    }
-
-    void HandleMovement(float curDistance, Vector3 heading)
-    {
-        if (!states.aim)
-            states.aim = (curDistance < backOffDistance * 2 && !states.isInAction);
-
-        if (curDistance > stopDistance)
-        {
-            // move towards
-            SmoothTowards(ref states.vertical, 1);
-        }
-        else if (
-            curDistance < backOffDistance
-            && !states.isInAction
-            )
-        {
-            // back off
-            SmoothTowards(ref states.vertical, -1);
-        }
-        else
-        {
-            // don't move
-            SmoothTowards(ref states.vertical, 0);
-        }
-
-        // assign move direction
-        Vector3 hor = heading.normalized;
-        hor.y = hor.z;
-        hor.z = hor.x;
-        hor.x = hor.y;
-        hor.y = 0; // lazy man's swap algorithm
-        hor *= states.horizontal;
-        Vector3 ver = heading.normalized * states.vertical;
-        states.moveDirection = (hor + ver).normalized;
-
-
-        // perform movement
-        states.moveAmount = Mathf.Clamp01(Mathf.Abs(states.horizontal) + Mathf.Abs(states.vertical));
     }
 
     void HandleAttack(float curDistance)

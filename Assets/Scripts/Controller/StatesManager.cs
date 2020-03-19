@@ -415,18 +415,20 @@ public class StatesManager : MonoBehaviour
     {
         if (enemyTarget == null) return;
 
-        
+        if (enemyTarget.states.isDead)
+        {
+            LockOff();
+            triggerNextLockon = true;
+        }
+
+        if (enemyTarget == null) return;
+
         float enemyTargetDistance = Vector3.Distance(enemyTarget.transform.position, transform.position);
         if (enemyTargetDistance > maxEnemyTargetDistance)
         {
             LockOff();
         }
 
-        if (enemyTarget.states.isDead)
-        {
-            LockOff();
-            triggerNextLockon = true;
-        }
         
     }
 

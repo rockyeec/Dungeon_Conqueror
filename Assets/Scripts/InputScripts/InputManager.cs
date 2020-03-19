@@ -250,7 +250,7 @@ public class InputManager : InputParent
 
     IEnumerator SnapifyChangeTarget()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.35f);
 
         canSwitchTarget = true;
     }
@@ -261,7 +261,7 @@ public class InputManager : InputParent
         StartCoroutine(SnapifyChangeTarget());
 
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 120, 1 << 11);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, lockonDist, 1 << 11);
         if (colliders.Length == 1)
         {
             return;
@@ -308,7 +308,7 @@ public class InputManager : InputParent
 
     void GetEnemyTarget()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 120, 1 << 11);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, lockonDist, 1 << 11);
         if (colliders.Length == 0) 
         {
             states.LockOff();

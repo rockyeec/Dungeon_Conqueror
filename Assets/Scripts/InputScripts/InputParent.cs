@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputParent : MonoBehaviour
 {
-    public float lockonYOffset = 0.8f;
+    public float lockonDist = 20;
 
     public StatesManager states;
 

@@ -5085,6 +5085,7 @@ MonoBehaviour:
   lockonYOffset: 0.8
   states: {fileID: 0}
   potionCounter: {fileID: 0}
+  lockonDist: 20
 --- !u!114 &6316920703542370479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5206,7 +5207,6 @@ MonoBehaviour:
   deadBody: {fileID: 0}
   enemyTarget: {fileID: 0}
   lookTransform: {fileID: 0}
-  engagedBy: {fileID: 0}
   animator: {fileID: 0}
   rigidBody: {fileID: 0}
   rpg: {fileID: 0}
@@ -5236,6 +5236,7 @@ MonoBehaviour:
   isSlowMove: 0
   jumpForce: 855
   triggerNextLockon: 0
+  isDead: 0
 --- !u!54 &6316920703542370477
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5390,8 +5391,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.4
-  m_Height: 1
+  m_Radius: 0.45
+  m_Height: 1.2
   m_Direction: 1
   m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!1 &6379253414781533449

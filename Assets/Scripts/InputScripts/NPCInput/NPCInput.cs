@@ -6,6 +6,8 @@ using TMPro;
 
 public class NPCInput : InputParent
 {
+    [HideInInspector] public RPGManager rpg;
+
     TextMeshProUGUI text;
 
     
@@ -46,6 +48,7 @@ public class NPCInput : InputParent
     {
         base.Awake();
 
+        rpg = states.rpg;
         states.OnRevive += States_OnRevive;
         states.OnDie += States_OnDie;
         states.OnFillUpEnemyTarget += States_OnFillUpEnemyTarget;

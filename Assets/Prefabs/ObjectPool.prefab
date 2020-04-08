@@ -44,59 +44,66 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolList:
-  - key: Potion(Clone)
-    prefab: {fileID: 8084637701146840126, guid: 5cb8a8befd0db074aa7640eb87163c00,
+  - prefab: {fileID: 8084637701146840126, guid: 5cb8a8befd0db074aa7640eb87163c00,
       type: 3}
     initialAmount: 120
-  - key: Blood(Clone)
-    prefab: {fileID: 3617972607939732330, guid: 5a335696990b1564a8ac3f8c46e96d29,
+  - prefab: {fileID: 762052598100337266, guid: 93a17143fc1fe4c418665552694b70d8, type: 3}
+    initialAmount: 45
+  - prefab: {fileID: 762052598100337266, guid: 1b5f94c41421dff4382a46630f736efa, type: 3}
+    initialAmount: 45
+  - prefab: {fileID: 762052598100337266, guid: 92dc7f40fc6881443affe321729d3c83, type: 3}
+    initialAmount: 45
+  - prefab: {fileID: 762052598100337266, guid: a5129f1d6e20eb5428849103d12f9610, type: 3}
+    initialAmount: 45
+  - prefab: {fileID: 762052598100337266, guid: a044fd411e4ddf147a6bdbfdc78d3277, type: 3}
+    initialAmount: 45
+  - prefab: {fileID: 762052598100337266, guid: c55e166bc72805f4da34512c5ded2e06, type: 3}
+    initialAmount: 45
+  - prefab: {fileID: 3601562488491452117, guid: e024fa74df6bf3d4b88dfa9bc42a8db2,
       type: 3}
-    initialAmount: 250
-  - key: Sparks(Clone)
-    prefab: {fileID: 3617972607939732330, guid: bc2a1173305abb049bcda4fa2f70fda9,
+    initialAmount: 45
+  - prefab: {fileID: 3601562488491452117, guid: b4f0ff8e2be0f43429e3b4b9767395b4,
       type: 3}
-    initialAmount: 250
-  - key: Enemy_Warrior(Clone)
-    prefab: {fileID: 5773779560252307953, guid: 1a1a86157ae099c43a3316694159735d,
+    initialAmount: 45
+  - prefab: {fileID: 6726112655713797247, guid: 59ba38f6db2ccff43b69e491d07824e5,
       type: 3}
-    initialAmount: 125
-  - key: Boss(Clone)
-    prefab: {fileID: 5773779560252307953, guid: 39a8537ff5cd39b46bd6b934f59660f6,
+    initialAmount: 45
+  - prefab: {fileID: 3617972607939732330, guid: b52b90d9f6724a84b9087ac45bcf6bb5,
       type: 3}
-    initialAmount: 1
-  - key: Controller Warrior(Clone)
-    prefab: {fileID: 7267377330263380795, guid: 4063efab2574fba42927c697b3cf58cd,
-      type: 3}
-    initialAmount: 1
-  - key: Controller Archer(Clone)
-    prefab: {fileID: 6316920703542370483, guid: 0f6d8d097439e86409d4d23ca9c3fc9a,
-      type: 3}
-    initialAmount: 1
-  - key: Enemy_Archer(Clone)
-    prefab: {fileID: 6316920703542370483, guid: 6e7b483b8ef1edf46b28613ecafb0351,
-      type: 3}
-    initialAmount: 125
-  - key: Blue Sparks(Clone)
-    prefab: {fileID: 3617972607939732330, guid: 0c0956d2676b36b49ae9efe8f1770295,
-      type: 3}
-    initialAmount: 75
-  - key: Controller Mage(Clone)
-    prefab: {fileID: 7267377330263380795, guid: 642f89fc9af607b43ba78fe8e84eac61,
+    initialAmount: 15
+  - prefab: {fileID: 6316920703542370483, guid: 0f6d8d097439e86409d4d23ca9c3fc9a,
       type: 3}
     initialAmount: 1
-  - key: Ally_Flesh_Golem(Clone)
-    prefab: {fileID: 5773779560252307953, guid: 212bc3c9c669291459bb2559f7ed40f7,
+  - prefab: {fileID: 7267377330263380795, guid: 642f89fc9af607b43ba78fe8e84eac61,
+      type: 3}
+    initialAmount: 1
+  - prefab: {fileID: 7267377330263380795, guid: 4063efab2574fba42927c697b3cf58cd,
+      type: 3}
+    initialAmount: 1
+  - prefab: {fileID: 5773779560252307953, guid: 212bc3c9c669291459bb2559f7ed40f7,
       type: 3}
     initialAmount: 25
-  - key: Fire(Clone)
-    prefab: {fileID: 3617972607939732330, guid: b52b90d9f6724a84b9087ac45bcf6bb5,
+  - prefab: {fileID: 6316920703542370483, guid: 6e7b483b8ef1edf46b28613ecafb0351,
       type: 3}
     initialAmount: 25
-  - key: Enemy_Brute(Clone)
-    prefab: {fileID: 5773779560252307953, guid: da46f0c165d7f75428e6fbf256246a18,
+  - prefab: {fileID: 5773779560252307953, guid: da46f0c165d7f75428e6fbf256246a18,
       type: 3}
-    initialAmount: 75
-  - key: Arrow_Prefab(Clone)
-    prefab: {fileID: 4751566988456248797, guid: 8d23a530b22e30b40a7b4c2c372a05b9,
+    initialAmount: 25
+  - prefab: {fileID: 5773779560252307953, guid: 1a1a86157ae099c43a3316694159735d,
       type: 3}
-    initialAmount: 125
+    initialAmount: 25
+  - prefab: {fileID: 3617972607939732330, guid: 5a335696990b1564a8ac3f8c46e96d29,
+      type: 3}
+    initialAmount: 120
+  - prefab: {fileID: 3617972607939732330, guid: 0c0956d2676b36b49ae9efe8f1770295,
+      type: 3}
+    initialAmount: 120
+  - prefab: {fileID: 3617972607939732330, guid: bc2a1173305abb049bcda4fa2f70fda9,
+      type: 3}
+    initialAmount: 250
+  - prefab: {fileID: 5773779560252307953, guid: 39a8537ff5cd39b46bd6b934f59660f6,
+      type: 3}
+    initialAmount: 1
+  - prefab: {fileID: 4751566988456248797, guid: 8d23a530b22e30b40a7b4c2c372a05b9,
+      type: 3}
+    initialAmount: 250

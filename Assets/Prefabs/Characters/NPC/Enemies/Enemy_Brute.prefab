@@ -363,6 +363,7 @@ MonoBehaviour:
   generalStuff: []
   shields: []
   statModifier: []
+  currentShield: {fileID: 0}
 --- !u!114 &-44975579904345453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,11 +380,16 @@ MonoBehaviour:
   ui: {fileID: 0}
   lockonDist: 25
   states: {fileID: 0}
+  rpg: {fileID: 0}
   stopDistance: 2.8
   backOffDistance: 1.44
   hostileLayer: 10
   lastTargetPosition: {x: 0, y: 0, z: 0}
   pathRequestOrderPlaced: 0
+  weaponList:
+  - Double Edged Axe Giant(Clone)
+  - Long Sword(Clone)
+  shieldList: []
 --- !u!1001 &5542554804132878216
 PrefabInstance:
   m_ObjectHideFlags: 0

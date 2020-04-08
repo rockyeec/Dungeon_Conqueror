@@ -15,41 +15,60 @@ public class EquippableBow : Pickuppable, IAttackable
     }
     
 
+    void PutAt(Transform who, Transform where)
+    {
+        who.parent = where;
+        who.localPosition = Vector3.zero;
+        who.localRotation = Quaternion.identity;
+    }
+
     public void Equip(AnimatorEventManager wielder)
     {
+        // physics
         gameObject.SetActive(true);
         SetRigidbodyActivity(false);
+        
+        // who's boss
         this.wielder = wielder;
+        wielder.states.rpg.currentWeapon = this;
+
+        // animation modification
         LimitLeftHand(true);
-        bowArt.Equip(this.wielder);
 
         // i dunno keep myself in yer pockets
-        transform.parent = wielder.transform;
+        PutAt(transform, wielder.leftHand);
 
         // put arrow in right hand
-        fakeArrow.transform.parent = this.wielder.rightHand;
-        fakeArrow.transform.localPosition = Vector3.zero;
-        fakeArrow.transform.localRotation = Quaternion.identity;
+        PutAt(fakeArrow.transform, wielder.rightHand);
         fakeArrow.SetActive(false);
 
         // put bow in left hand
-        bowArt.transform.parent.parent = this.wielder.leftHand;
-        bowArt.transform.parent.localPosition = Vector3.zero;
-        bowArt.transform.parent.localRotation = Quaternion.identity;
+        PutAt(bowArt.transform.parent, wielder.leftHand);
+        bowArt.Equip(this.wielder);
     }
 
     public void Unequip()
     {
+        // physics
         gameObject.SetActive(true);
         SetRigidbodyActivity(true);
-        transform.parent = null;
-        fakeArrow.transform.parent = transform;
+
+        // take out arrow
+        PutAt(fakeArrow.transform, transform);
         fakeArrow.SetActive(false);
 
-        bowArt.transform.parent.parent = transform;
+        // take out bow
+        PutAt(bowArt.transform.parent, transform);
         bowArt.Unequip();
 
+        // take out weapons from hands
+        transform.parent = null;
+
+        // modify animation
         LimitLeftHand(false);
+
+        // de-boss yourself
+        wielder.states.rpg.currentWeapon = null;
         wielder = null;
     }
 

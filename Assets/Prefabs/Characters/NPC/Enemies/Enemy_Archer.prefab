@@ -85,100 +85,34 @@ MonoBehaviour:
   actionCurveMultiplier: 8.5
   jumpStaminaConsumption: 3
   dodgeAction:
-    actionAnimationName: Archer Attack 1 Ready
+    actionAnimationName: Dodge Blend Tree
     actionAnimationCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0.0015792847
         value: 0
-        inSlope: 0.40749756
-        outSlope: 0.40749756
+        inSlope: 2.5753016
+        outSlope: 2.5753016
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.08379358
+        outWeight: 0.005863704
       - serializedVersion: 3
         time: 0.9992676
         value: 0.0015144348
-        inSlope: 0.39820072
-        outSlope: 0.39820072
+        inSlope: -0.5955785
+        outSlope: -0.5955785
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.048973177
+        inWeight: 0.050552882
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
+    audioClip: {fileID: 8300000, guid: c27eef341c6497a45a276b0bffa496fe, type: 3}
     staminaConsumption: 4
     damageMultiplier: 1
-    volumeScale: 0.4
-  attackComboListForFire1:
-  - actionAnimationName: Archer Attack 1 Ready
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: -0.14758252
-        outSlope: -0.14758252
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.06556082
-      - serializedVersion: 3
-        time: 0.9992676
-        value: 0.0030288696
-        inSlope: -0.08254923
-        outSlope: -0.08254923
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.039494533
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
-    audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 1
-    volumeScale: 0.4
-  attackActionForFire2:
-    actionAnimationName: Archer Attack 2 Ready
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
-    staminaConsumption: 8
-    damageMultiplier: 0.6
-    volumeScale: 0.4
-  attackActionForFire3:
-    actionAnimationName: Archer Attack 3 Ready
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 0.65
-    volumeScale: 0.4
-  aimAttackString:
-    actionAnimationName: Archer Aim Attack
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 3
     volumeScale: 0.4
   drinkPotion:
     actionAnimationName: Drink
@@ -227,6 +161,7 @@ MonoBehaviour:
   dieScript: {fileID: 0}
   capsule: {fileID: 0}
   aem: {fileID: 0}
+  ikManager: {fileID: 0}
   vertical: 0
   horizontal: 0
   sprint: 0
@@ -425,7 +360,10 @@ MonoBehaviour:
   startStamRegenRate: 2.5
   minDamage: 3
   maxDamage: 5
+  generalStuff: []
+  shields: []
   statModifier: []
+  currentShield: {fileID: 0}
 --- !u!114 &2768005740268748183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,11 +380,15 @@ MonoBehaviour:
   ui: {fileID: 0}
   lockonDist: 25
   states: {fileID: 0}
+  rpg: {fileID: 0}
   stopDistance: 22
   backOffDistance: 1.65
   hostileLayer: 10
   lastTargetPosition: {x: 0, y: 0, z: 0}
   pathRequestOrderPlaced: 0
+  weaponList:
+  - Bow(Clone)
+  shieldList: []
 --- !u!1001 &3701117465253261932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -676,47 +618,47 @@ PrefabInstance:
     - target: {fileID: 37720318257146194, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -0.00006565759
+      value: -0.00006566505
       objectReference: {fileID: 0}
     - target: {fileID: 37720318257146194, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: -0.4436315
+      value: -0.44363156
       objectReference: {fileID: 0}
     - target: {fileID: 37720318257146194, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: 0.008544386
+      value: 0.008544332
       objectReference: {fileID: 0}
     - target: {fileID: 82542399786388651, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -0.15162815
+      value: -0.15162817
       objectReference: {fileID: 0}
     - target: {fileID: 82542399786388651, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: -0.048601117
+      value: -0.04860108
       objectReference: {fileID: 0}
     - target: {fileID: 1188060693458136254, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: -0.015995523
+      value: -0.015995556
       objectReference: {fileID: 0}
     - target: {fileID: 1292374335029832468, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -0.00006566501
+      value: -0.000065665
       objectReference: {fileID: 0}
     - target: {fileID: 1292374335029832468, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: -0.44363213
+      value: -0.44363207
       objectReference: {fileID: 0}
     - target: {fileID: 1292374335029832468, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: 0.00855555
+      value: 0.008555583
       objectReference: {fileID: 0}
     - target: {fileID: 1860495996822542334, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
@@ -776,12 +718,12 @@ PrefabInstance:
     - target: {fileID: 2854819732284011799, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -0.00000020854074
+      value: -0.0000002100252
       objectReference: {fileID: 0}
     - target: {fileID: 2854819732284011799, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: -0.022426981
+      value: -0.02242701
       objectReference: {fileID: 0}
     - target: {fileID: 3425716048751633901, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
@@ -791,37 +733,37 @@ PrefabInstance:
     - target: {fileID: 5101415118651942475, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 0.0000000014843715
+      value: -0.0000000021148967
       objectReference: {fileID: 0}
     - target: {fileID: 5101415118651942475, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: -0.008311603
+      value: -0.008311614
       objectReference: {fileID: 0}
     - target: {fileID: 6069817773420819838, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: -0.015995638
+      value: -0.015995594
       objectReference: {fileID: 0}
     - target: {fileID: 8190894829133215711, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: 0.00000016205014
+      value: 0.00000011734665
       objectReference: {fileID: 0}
     - target: {fileID: 8361568908603384296, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: -0.0000009482257
+      value: -0.00000094822576
       objectReference: {fileID: 0}
     - target: {fileID: 8361568908603384296, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: 0.00000032410026
+      value: 0.00000031664968
       objectReference: {fileID: 0}
     - target: {fileID: 8625601779348943503, guid: 6b1ea4e77db669c4f91f56122efab617,
         type: 3}
       propertyPath: m_ConnectedAnchor.z
-      value: -0.048601117
+      value: -0.048601154
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b1ea4e77db669c4f91f56122efab617, type: 3}

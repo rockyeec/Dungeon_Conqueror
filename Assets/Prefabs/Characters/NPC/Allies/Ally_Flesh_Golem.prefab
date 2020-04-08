@@ -83,137 +83,6 @@ MonoBehaviour:
     staminaConsumption: 4
     damageMultiplier: 0
     volumeScale: 0.4
-  attackComboListForFire1:
-  - actionAnimationName: Archer Attack 1
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 5.068325
-        outSlope: 5.068325
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.017418174
-      - serializedVersion: 3
-        time: 0.9992676
-        value: 0.001991272
-        inSlope: 0.22235811
-        outSlope: 0.22235811
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.15113665
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
-    audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 1.2
-    volumeScale: 0.4
-  - actionAnimationName: Warrior Attack 2
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 4.7766323
-        outSlope: 4.7766323
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.012592326
-      - serializedVersion: 3
-        time: 1.0000486
-        value: -0.002000593
-        inSlope: -0.55153036
-        outSlope: -0.55153036
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.089342184
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
-    audioClip: {fileID: 8300000, guid: 902740e269a6304468ed1c50b4f23de4, type: 3}
-    staminaConsumption: 3
-    damageMultiplier: 1.7
-    volumeScale: 0.4
-  attackActionForFire2:
-    actionAnimationName: Warrior Jump Attack
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 5.518041
-        outSlope: 5.518041
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.013417522
-      - serializedVersion: 3
-        time: 0.9984131
-        value: 0.004547119
-        inSlope: 0.50283843
-        outSlope: 0.50283843
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.03078136
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
-    staminaConsumption: 8
-    damageMultiplier: 3
-    volumeScale: 0.4
-  attackActionForFire3:
-    actionAnimationName: Warrior Area Attack
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 4.8073606
-        outSlope: 4.8073606
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.014996054
-      - serializedVersion: 3
-        time: 1.0031738
-        value: 0.0015144348
-        inSlope: -4.1060143
-        outSlope: -4.1060143
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.111823656
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: 902740e269a6304468ed1c50b4f23de4, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 2.5
-    volumeScale: 0.4
-  aimAttackString:
-    actionAnimationName: Warrior Attack Stab
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 1
-    volumeScale: 0.4
   drinkPotion:
     actionAnimationName: 
     actionAnimationCurve:
@@ -460,7 +329,10 @@ MonoBehaviour:
   startStamRegenRate: 2.5
   minDamage: 1.5
   maxDamage: 3.2
+  generalStuff: []
+  shields: []
   statModifier: []
+  currentShield: {fileID: 0}
 --- !u!114 &2825961909121840316
 MonoBehaviour:
   m_ObjectHideFlags: 0

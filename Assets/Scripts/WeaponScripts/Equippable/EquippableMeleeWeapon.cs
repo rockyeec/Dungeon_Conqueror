@@ -24,10 +24,16 @@ public class EquippableMeleeWeapon : Pickuppable, IAttackable
     {
         gameObject.SetActive(true);
         SetRigidbodyActivity(false);
+
+        // who's boss
         this.wielder = wielder;
+        wielder.states.rpg.currentWeapon = this;
+
+        // animation modification
         LimitRightHand(true);
         weapon.wielder = wielder;
 
+        // put weapon in right hand
         transform.parent = wielder.rightHand;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -35,12 +41,19 @@ public class EquippableMeleeWeapon : Pickuppable, IAttackable
 
     public void Unequip()
     {
+        // physics
         gameObject.SetActive(true);
         SetRigidbodyActivity(true);
-        transform.parent = null;
 
+        // take out from hand
+        transform.parent = null;
         weapon.wielder = null;
+
+        // modify animations
         LimitRightHand(false);
+
+        // de-boss.. Merdeka! You answer to NO ONE now!!
+        wielder.states.rpg.currentWeapon = null;
         wielder = null;
     }
 

@@ -275,7 +275,7 @@ public class InputManager : InputParent
     void SettleAim()
     {
         states.aim = Input.GetButton("Aim") && states.rpg.EnoughStamina();
-        if (states.aim)
+        if (states.animator.GetBool("aim"))
         {
             mainCam.fieldOfView = Mathf.MoveTowards(mainCam.fieldOfView, 30, delta * 130);
             cameraManager.currentFollowSpeed = 3 * cameraManager.followSpeed;
@@ -489,6 +489,7 @@ public class InputManager : InputParent
     {
         float distance = 150;
         if (states.aim || states.isInAction)
+        //if (states.animator.GetBool("aim") || states.isInAction)
         {
             Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
             RaycastHit hitInfo;         

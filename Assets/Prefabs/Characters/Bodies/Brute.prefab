@@ -1944,7 +1944,7 @@ MonoBehaviour:
   friendlyLayer: 10
   states: {fileID: 0}
   animator: {fileID: 0}
-  shield: {fileID: 0}
+  rpg: {fileID: 0}
   head: {fileID: 0}
   body: {fileID: 0}
   rightHand: {fileID: 0}

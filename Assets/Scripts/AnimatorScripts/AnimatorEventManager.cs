@@ -10,13 +10,14 @@ public class AnimatorEventManager : MonoBehaviour
     // components
     [HideInInspector] public StatesManager states;
     [HideInInspector] public Animator animator;
+    [HideInInspector] public RPGManager rpg;
 
     // weapon slots
     /*[HideInInspector] public IEquippable rightWeapon;
     [HideInInspector] public IEquippable leftWeapon;*/
     //[HideInInspector] public EquippableMeleeWeapon weapon;
     //[HideInInspector] public EquippableBow bow;
-    [HideInInspector] public EquippableShield shield;
+    //[HideInInspector] public EquippableShield shield;
 
     // cached body parts
     [HideInInspector] public Transform head;
@@ -58,7 +59,8 @@ public class AnimatorEventManager : MonoBehaviour
         rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
         leftHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
         leftArm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
-        states = GetComponentInParent<StatesManager>();        
+        states = GetComponentInParent<StatesManager>();
+        rpg = states.rpg;
 
 
         MageCommandPointIdentifier temp = GetComponentInChildren<MageCommandPointIdentifier>();
@@ -89,44 +91,46 @@ public class AnimatorEventManager : MonoBehaviour
 
     private void Update()
     {
-        if (states.rpg.generalStuff.Count == 0)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (states.rpg.generalStuff.Count != 0)
         {
             IAttackable weapon = states.rpg.generalStuff[0].GetComponent<IAttackable>();
             if (weapon != null)
             {
-                weapon.Equip(this);
+                states.rpg.generalStuff.RemoveAt(0);
+                states.rpg.weapons.Add(weapon);
             }
-            states.rpg.weapons.Add(weapon);
 
             EquippableShield shield = states.rpg.generalStuff[0].GetComponent<EquippableShield>();
             if (shield != null)
             {
-                shield.Equip(this);
+                states.rpg.generalStuff.RemoveAt(0);
+                states.rpg.shields.Add(shield);
             }
-            states.rpg.shields.Add(shield);
+        }
+; 
+
+        
+        if (rpg.currentWeapon == null && rpg.weapons.Count != 0)
+        {
+            rpg.currentWeapon = rpg.weapons[0];
+            rpg.currentWeapon.Equip(this);
+            rpg.weapons.RemoveAt(0);
         }
 
-        if (states.rpg.weapons.Count == 0 || states.rpg.shields.Count == 0)
-            return; 
-
-        if (Input.GetKeyDown(KeyCode.C))
+        if (rpg.currentShield == null && rpg.shields.Count != 0)
         {
-            if (states.rpg.weapons[0] != null)
-                states.rpg.weapons[0].Equip(this);
-
-            if (shield != null)
-                shield.Equip(this);
+            rpg.currentShield = rpg.shields[0];
+            rpg.currentShield.Equip(this);
+            rpg.shields.RemoveAt(0);
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        
+        if (Input.GetKeyDown(KeyCode.X) && rpg.currentWeapon != null)
         {
-            if (states.rpg.weapons[0] != null)
-                states.rpg.weapons[0].Unequip();
+            if (rpg.currentWeapon != null)
+                rpg.currentWeapon.Unequip();
 
-            if (shield != null)
-                shield.Unequip();
+            if (rpg.currentShield != null)
+                rpg.currentShield.Unequip();
         }
     }
 
@@ -134,12 +138,12 @@ public class AnimatorEventManager : MonoBehaviour
     #region General Actions
     public virtual void Attack()
     {
-        states.rpg.weapons[0].Attack();
+        rpg.currentWeapon.Attack();
     }
 
     public virtual void EndAttack()
     {
-        states.rpg.weapons[0].EndAttack();
+        rpg.currentWeapon.EndAttack();
     }
 
     public void EndAction()
@@ -232,16 +236,16 @@ public class AnimatorEventManager : MonoBehaviour
 
     public void LaunchArrow()
     {
-        states.rpg.weapons[0].LaunchArrow();
+        rpg.currentWeapon.LaunchArrow();
     }
 
     public void LaunchMultipleArrowsVertically()
     {
-        states.rpg.weapons[0].LaunchMultipleArrowsVertically();
+        rpg.currentWeapon.LaunchMultipleArrowsVertically();
     }
     public void LaunchMultipleArrowsHorizontally()
     {
-        states.rpg.weapons[0].LaunchMultipleArrowsHorizontally();
+        rpg.currentWeapon.LaunchMultipleArrowsHorizontally();
     }
 
 

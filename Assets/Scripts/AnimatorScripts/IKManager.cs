@@ -107,7 +107,8 @@ public class IKManager : MonoBehaviour
         if (animator.GetBool("ignoreIK")) return;
 
         // IK the whole thing
-        if (states.aim
+        //if (states.aim
+        if (animator.GetBool("aim")
             || animator.GetBool("stillAiming"))
         {
             BendWaistAccordingTo(states.lookPosition);
@@ -120,7 +121,8 @@ public class IKManager : MonoBehaviour
             return;
         }
 
-        if (states.isInAction && !states.isDodge) // Only IK pitch angle! NOT cardinal facing
+        //if ((states.isInAction) && !states.isDodge) // Only IK pitch angle! NOT cardinal facing
+        if ((states.isInAction || animator.GetBool("block")) && !states.isDodge)
         {
             if (states.lockon && states.enemyTarget != null)
             {

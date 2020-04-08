@@ -243,6 +243,7 @@ public class StatesManager : MonoBehaviour
         if (potionHand != null)
             this.potionHand = potionHand.transform;
 
+        pickUp.actionAnimationName = "Pick Up";
     }
 
 
@@ -510,7 +511,8 @@ public class StatesManager : MonoBehaviour
     void HandleRotation()
     {
         if (moveDirection != Vector3.zero
-            && !aim)
+            //&& !aim)
+            && !animator.GetBool("aim"))
         {
             Quaternion r = Quaternion.identity;
 
@@ -574,7 +576,8 @@ public class StatesManager : MonoBehaviour
     {
         HandleMoveAmount();
 
-        if (lockon || aim)
+        //if (lockon || aim)
+        if (animator.GetBool("aim") || lockon)
         {
             if (lockon)
                 animator.SetBool("lockon", true);
@@ -611,13 +614,13 @@ public class StatesManager : MonoBehaviour
 
         if (aim)
         {
-            if (rpg.shields[0] != null)
+            if (rpg.currentShield != null)
             {
                 animator.SetBool("block", true);
             }
             else
             {
-               animator.SetBool(rpg.weapons[0].MoveSet.aimBool, true);
+               animator.SetBool(rpg.currentWeapon.MoveSet.aimBool, true);
             }
         }
         else
@@ -747,18 +750,52 @@ public class StatesManager : MonoBehaviour
     {
         string actionAnimation = null;
 
-        if (fire1)
+        if (rpg.currentWeapon != null)
         {
-            isFire2 = true; // gravity applies when jump attack
-            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire1[attComboIndex], ref actionAnimation, ref isInAction);
-            if (attComboIndex < rpg.weapons[0].MoveSet.fire1.Count - 1)
+            if (fire1)
             {
-                attComboIndex++;
+                isFire2 = true; // gravity applies when jump attack
+                PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire1[attComboIndex], ref actionAnimation, ref isInAction);
+                if (attComboIndex < rpg.currentWeapon.MoveSet.fire1.Count - 1)
+                {
+                    attComboIndex++;
+                }
+                else
+                {
+                    attComboIndex = 0;
+                }
             }
-            else
+
+            if (fire2)
             {
-                attComboIndex = 0;
+                fire2 = false;
+                isFire2 = true; // gravity applies when jump attack
+                PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire2, ref actionAnimation, ref isInAction);
             }
+
+            if (fire3)
+            {
+                isFire2 = true; // gravity applies when jump attack
+                fire3 = false;
+                PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire3, ref actionAnimation, ref isInAction);
+            }
+
+
+            if (aimFire && animator.GetBool("canAimAttack"))
+            {
+                PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire4, ref actionAnimation, ref isSlowMove);
+            }
+        }
+
+        if (point && animator.GetBool("canAimAttack"))
+        {
+            PerformActionWithCurve(pointAction, ref actionAnimation, ref isSlowMove);
+        }
+
+        if (isPickUp)
+        {
+            isPickUp = false;
+            PerformActionWithCurve(pickUp, ref actionAnimation, ref isInAction);
         }
 
         if (dodge && !isDodge)
@@ -767,26 +804,7 @@ public class StatesManager : MonoBehaviour
             isDodge = true;
             PerformActionWithCurve(dodgeAction, ref actionAnimation, ref isInAction);
         }
-
-        if (fire2)
-        {
-            fire2 = false;
-            isFire2 = true; // gravity applies when jump attack
-            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire2, ref actionAnimation, ref isInAction);
-        }
-
-        if (fire3)
-        {
-            isFire2 = true; // gravity applies when jump attack
-            fire3 = false;
-            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire3, ref actionAnimation, ref isInAction);
-        }
-
-        if (isPickUp)
-        {
-            isPickUp = false;
-            PerformActionWithCurve(pickUp, ref actionAnimation, ref isInAction);
-        }
+        
 
         if (drink 
             && havePotion
@@ -797,16 +815,6 @@ public class StatesManager : MonoBehaviour
             currentPotion = rpg.potions[potionIndex].Dequeue();
             OnDrink(currentPotion);
             currentPotion.UsePotion(this);            
-        }
-
-        if (aimFire && animator.GetBool("canAimAttack"))
-        {
-            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire4, ref actionAnimation, ref isSlowMove);
-        }
-
-        if (point && animator.GetBool("canAimAttack"))
-        {
-            PerformActionWithCurve(pointAction, ref actionAnimation, ref isSlowMove);
         }
 
         if (followMe)

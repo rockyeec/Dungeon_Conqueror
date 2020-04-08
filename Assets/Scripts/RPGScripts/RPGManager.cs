@@ -112,13 +112,18 @@ public class RPGManager : MonoBehaviour
     public List<Pickuppable> generalStuff = new List<Pickuppable>();
     [HideInInspector]
     public List<IAttackable> weapons = new List<IAttackable>();
-    [HideInInspector]
+    [HideInInspector] 
     public List<EquippableShield> shields = new List<EquippableShield>();
     [HideInInspector]
     public List<Queue<PotionScript>> potions = new List<Queue<PotionScript>>();
     [HideInInspector]
     public List<float> statModifier = new List<float>();
     GameObject potionEffect;
+
+    [HideInInspector]
+    public IAttackable currentWeapon;
+    [HideInInspector]
+    public EquippableShield currentShield;
     
 
 

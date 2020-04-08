@@ -44,10 +44,10 @@ public class WeaponManager : MonoBehaviour
 
         bool hasHitShield = false;
 
-        EquippableShield shieldScript = ip.states.aem.shield;
-        if (shieldScript != null)
+        EquippableShield equippableShield = ip.states.rpg.currentShield;
+        if (equippableShield != null)
         {
-            if (shieldScript.gameObject.activeSelf)
+            if (equippableShield.shieldScript.gameObject.activeSelf)
             {
                 float angle = Vector3.SignedAngle(ip.transform.forward, ownerForward, Vector3.up);
                 //Debug.Log(angle);
@@ -56,7 +56,7 @@ public class WeaponManager : MonoBehaviour
                     //isHit = true;
                     hasHitShield = true;
                     particle = "Blue Sparks(Clone)";
-                    if (shieldScript.shieldScript.parryWindow)
+                    if (equippableShield.shieldScript.parryWindow)
                     {
                         if (wielder != null)
                             wielder.animator.CrossFade("Stagger", 0.15f);

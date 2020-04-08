@@ -51,7 +51,21 @@ public class AnimatorEventManager : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
+        head = animator.GetBoneTransform(HumanBodyBones.Head);
+        body = animator.GetBoneTransform(HumanBodyBones.Chest);
+        rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+        states = GetComponentInParent<StatesManager>();        
 
+
+        MageCommandPointIdentifier temp = GetComponentInChildren<MageCommandPointIdentifier>();
+        if (temp != null)
+        {
+            goThere = temp.transform.parent;
+            commandCursor = temp.gameObject;
+            commandCursor.SetActive(false);
+        }
+
+        states.OnDrink += States_OnDrink;
         
 
         weapon = GetComponentInChildren<EquippableMeleeWeapon>();
@@ -71,24 +85,33 @@ public class AnimatorEventManager : MonoBehaviour
         {
             bow.Equip(this);
         }
-
-        head = animator.GetBoneTransform(HumanBodyBones.Head);
-        body = animator.GetBoneTransform(HumanBodyBones.Chest);
-        rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
-        states = GetComponentInParent<StatesManager>();
-
-        MageCommandPointIdentifier temp = GetComponentInChildren<MageCommandPointIdentifier>();
-        if (temp != null)
-        {
-            goThere = temp.transform.parent;
-            commandCursor = temp.gameObject;
-            commandCursor.SetActive(false);
-        }
-
-        states.OnDrink += States_OnDrink;
     }
 
-    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (bow != null)
+                bow.Equip(this);
+
+            if (weapon != null)
+                weapon.Equip(this);
+
+            if (shield != null)
+                shield.Equip(this);
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (bow != null)
+                bow.Unequip();
+
+            if (weapon != null)
+                weapon.Unequip();
+
+            if (shield != null)
+                shield.Unequip();
+        }
+    }
 
 
     #region General Actions
@@ -153,10 +176,10 @@ public class AnimatorEventManager : MonoBehaviour
 
         for (int i = 0; i < items.Length; i++)
         {
-            PotionScript potion = items[i].GetComponent<PotionScript>();
-            if (potion != null)
+            Pickuppable stuff = items[i].GetComponent<Pickuppable>();
+            if (stuff != null)
             {
-                potion.ObtainPotion(states);
+                stuff.PickUp(states);
             }
         }
     }

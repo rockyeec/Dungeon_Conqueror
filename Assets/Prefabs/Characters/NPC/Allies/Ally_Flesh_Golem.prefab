@@ -570,6 +570,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie Ranger
       objectReference: {fileID: 0}
+    - target: {fileID: 6007188230616855440, guid: 016232e357e5e294c959e7b7bf28d436,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.232
+      objectReference: {fileID: 0}
     - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquippableShield : MonoBehaviour, IEquippable
+public class EquippableShield : Pickuppable, IEquippable
 {
     public ShieldScript shieldScript;
     [HideInInspector] public AnimatorEventManager wielder;
+
 
     public void Equip(AnimatorEventManager wielder)
     {

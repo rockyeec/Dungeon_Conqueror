@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PotionScript : MonoBehaviour
+public class PotionScript : Pickuppable
 {
     [System.Serializable]
     public class PotionType
@@ -39,30 +39,25 @@ public class PotionScript : MonoBehaviour
     [HideInInspector] public PotionType potionType;
     public GameObject liquidContent;
 
-    BoxCollider boxCollider;
+    
     MeshRenderer meshRenderer;
-    [HideInInspector] public Rigidbody rigidBody;
     Color emptyColor;
     
 
     bool isTaken;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (potionTypes.Count == 0)
         {
             AssignPotionTypes();
         }
 
-        boxCollider = GetComponent<BoxCollider>();
         meshRenderer = liquidContent.GetComponent<MeshRenderer>();
-        rigidBody = GetComponent<Rigidbody>();
         emptyColor = meshRenderer.material.color;
-
-        //temp
-        //rigidBody.useGravity = false;
-
-
+               
         ReInit();
     }
 
@@ -72,7 +67,6 @@ public class PotionScript : MonoBehaviour
         meshRenderer.material.color = potionType.color;
         boxCollider.enabled = true;
         isTaken = false;
-
     }
 
 
@@ -110,7 +104,7 @@ public class PotionScript : MonoBehaviour
         ObjectPool.Instance.ReturnObject(name, gameObject);
     }
 
-    public void ObtainPotion(StatesManager states)
+    public override void PickUp(StatesManager states)
     {
         if (!isTaken)
         {

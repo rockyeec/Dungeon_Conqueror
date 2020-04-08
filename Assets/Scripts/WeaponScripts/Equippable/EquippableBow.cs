@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquippableBow : MonoBehaviour, IEquippable
+public class EquippableBow : Pickuppable, IEquippable
 {
     [HideInInspector] public AnimatorEventManager wielder;
     public BowAnimatorScript bowArt;
     public GameObject fakeArrow;
 
-
+    
 
     public void Equip(AnimatorEventManager wielder)
     {
         this.wielder = wielder;
+        LimitLeftHand(true);
         bowArt.Equip(this.wielder);
 
         // i dunno keep myself in yer pockets
@@ -36,9 +37,17 @@ public class EquippableBow : MonoBehaviour, IEquippable
         fakeArrow.transform.parent = transform;
         fakeArrow.SetActive(false);
 
-        bowArt.transform.parent = transform;
+        bowArt.transform.parent.parent = transform;
         bowArt.Unequip();
+
+        LimitLeftHand(false);
         wielder = null;
     }
 
+
+    void LimitLeftHand(bool what)
+    {
+        Debug.Log("Waited all the frames bruh");
+        wielder.animator.SetBool("limitLeftHand", what);
+    }
 }

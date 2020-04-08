@@ -13,7 +13,7 @@ public class PathFinding : MonoBehaviour
     Queue<NPCInput> requestQueue = new Queue<NPCInput>();
     NPCInput currentRequest;
     bool isProcessing;
-    int maxProcessesPerFrame = 45;
+    int maxIterationsPerFrame = 25;
     
 
     public void RequestPath(NPCInput npc)
@@ -97,7 +97,7 @@ public class PathFinding : MonoBehaviour
             int loopsPerFrameCounter = 0;
             while (openList.Count > 0)
             {
-                if (++loopsPerFrameCounter > maxProcessesPerFrame)
+                if (++loopsPerFrameCounter > maxIterationsPerFrame)
                 {
                     loopsPerFrameCounter = 0;
                     yield return null;
@@ -113,7 +113,7 @@ public class PathFinding : MonoBehaviour
 
                 foreach (Node node in grid.GetNeighbours(currentNode))
                 {
-                    if (++loopsPerFrameCounter > maxProcessesPerFrame)
+                    if (++loopsPerFrameCounter > maxIterationsPerFrame)
                     {
                         loopsPerFrameCounter = 0;
                         yield return null;
@@ -151,7 +151,7 @@ public class PathFinding : MonoBehaviour
         int loopsPerFrameCounter = 0;
         while (end != start)
         {
-            if (++loopsPerFrameCounter > maxProcessesPerFrame * 2)
+            if (++loopsPerFrameCounter > maxIterationsPerFrame * 2)
             {
                 loopsPerFrameCounter = 0;
                 yield return null;

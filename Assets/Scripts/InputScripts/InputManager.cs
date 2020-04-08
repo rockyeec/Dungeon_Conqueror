@@ -277,7 +277,7 @@ public class InputManager : InputParent
         states.aim = Input.GetButton("Aim") && states.rpg.EnoughStamina();
         if (states.aim)
         {
-            mainCam.fieldOfView = Mathf.MoveTowards(mainCam.fieldOfView, 36, delta * 130);
+            mainCam.fieldOfView = Mathf.MoveTowards(mainCam.fieldOfView, 30, delta * 130);
             cameraManager.currentFollowSpeed = 3 * cameraManager.followSpeed;
         }
         else

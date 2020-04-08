@@ -14,14 +14,16 @@ public class AnimatorEventManager : MonoBehaviour
     // weapon slots
     /*[HideInInspector] public IEquippable rightWeapon;
     [HideInInspector] public IEquippable leftWeapon;*/
-    [HideInInspector] public EquippableMeleeWeapon weapon;
+    //[HideInInspector] public EquippableMeleeWeapon weapon;
+    //[HideInInspector] public EquippableBow bow;
     [HideInInspector] public EquippableShield shield;
-    [HideInInspector] public EquippableBow bow;
 
     // cached body parts
     [HideInInspector] public Transform head;
     [HideInInspector] public Transform body;
     [HideInInspector] public Transform rightHand;
+    [HideInInspector] public Transform leftHand;
+    [HideInInspector] public Transform leftArm;
 
     // audio
     AudioSource audioSource;
@@ -54,6 +56,8 @@ public class AnimatorEventManager : MonoBehaviour
         head = animator.GetBoneTransform(HumanBodyBones.Head);
         body = animator.GetBoneTransform(HumanBodyBones.Chest);
         rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+        leftHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
+        leftArm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
         states = GetComponentInParent<StatesManager>();        
 
 
@@ -66,47 +70,60 @@ public class AnimatorEventManager : MonoBehaviour
         }
 
         states.OnDrink += States_OnDrink;
-        
 
-        weapon = GetComponentInChildren<EquippableMeleeWeapon>();
+        
+        /*IAttackable weapon = GetComponentInChildren<IAttackable>();
         if (weapon != null)
         {
             weapon.Equip(this);
         }
+        states.rpg.weapons.Add(weapon);
 
-        shield = GetComponentInChildren<EquippableShield>();
+        EquippableShield shield = GetComponentInChildren<EquippableShield>();
         if (shield != null)
         {
             shield.Equip(this);
         }
-        
-        bow = GetComponentInChildren<EquippableBow>();
-        if (bow != null)
-        {
-            bow.Equip(this);
-        }
+        states.rpg.shields.Add(shield);*/
     }
 
     private void Update()
     {
+        if (states.rpg.generalStuff.Count == 0)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            IAttackable weapon = states.rpg.generalStuff[0].GetComponent<IAttackable>();
+            if (weapon != null)
+            {
+                weapon.Equip(this);
+            }
+            states.rpg.weapons.Add(weapon);
+
+            EquippableShield shield = states.rpg.generalStuff[0].GetComponent<EquippableShield>();
+            if (shield != null)
+            {
+                shield.Equip(this);
+            }
+            states.rpg.shields.Add(shield);
+        }
+
+        if (states.rpg.weapons.Count == 0 || states.rpg.shields.Count == 0)
+            return; 
+
         if (Input.GetKeyDown(KeyCode.C))
         {
-            if (bow != null)
-                bow.Equip(this);
-
-            if (weapon != null)
-                weapon.Equip(this);
+            if (states.rpg.weapons[0] != null)
+                states.rpg.weapons[0].Equip(this);
 
             if (shield != null)
                 shield.Equip(this);
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            if (bow != null)
-                bow.Unequip();
-
-            if (weapon != null)
-                weapon.Unequip();
+            if (states.rpg.weapons[0] != null)
+                states.rpg.weapons[0].Unequip();
 
             if (shield != null)
                 shield.Unequip();
@@ -117,37 +134,12 @@ public class AnimatorEventManager : MonoBehaviour
     #region General Actions
     public virtual void Attack()
     {
-        if (bow != null)
-        {
-            bow.fakeArrow.SetActive(true);
-            return;
-        }
-
-        if (weapon != null)
-        {
-            WeaponManager weapon = this.weapon.weapon;
-            weapon.gameObject.SetActive(true);
-            weapon.isHit = false;
-            weapon.friendlyLayer = friendlyLayer;
-            weapon.ownerForward = transform.forward;
-            weapon.damage = states.rpg.GetDamage() * states.damageMultiplier;
-            return;
-        }
+        states.rpg.weapons[0].Attack();
     }
 
     public virtual void EndAttack()
     {
-        if (bow != null)
-        {
-            bow.fakeArrow.SetActive(false);
-            return;
-        }
-
-        if (weapon != null)
-        {
-            weapon.weapon.gameObject.SetActive(false);
-            return;
-        }
+        states.rpg.weapons[0].EndAttack();
     }
 
     public void EndAction()
@@ -240,43 +232,16 @@ public class AnimatorEventManager : MonoBehaviour
 
     public void LaunchArrow()
     {
-        if (bow == null)
-            return;
-
-        GameObject arrow = ObjectPool.Instance.GetObject("Arrow_Prefab(Clone)", bow.fakeArrow.transform.position, head.rotation);
-        AssignArrowVariables(arrow.GetComponent<ArrowManager>());
+        states.rpg.weapons[0].LaunchArrow();
     }
 
     public void LaunchMultipleArrowsVertically()
     {
-        LaunchMultipleArrows("vertically");
+        states.rpg.weapons[0].LaunchMultipleArrowsVertically();
     }
     public void LaunchMultipleArrowsHorizontally()
     {
-        LaunchMultipleArrows("horizontally");
-    }
-
-    public void LaunchMultipleArrows(string method)
-    {
-        for (int i = 0; i < arrowCount; i++)
-        {
-            float yDir = -(arcAngle / 2) + i * (arcAngle / arrowCount);
-            Vector3 offset = method == "horizontally" ? new Vector3(0, yDir) : new Vector3(yDir, 0);
-            Quaternion rot = Quaternion.Euler(head.eulerAngles + offset);
-
-            GameObject arrow = ObjectPool.Instance.GetObject("Arrow_Prefab(Clone)", bow.fakeArrow.transform.position, rot);
-            AssignArrowVariables(arrow.GetComponent<ArrowManager>());
-        }
-
-    }
-
-    void AssignArrowVariables(ArrowManager aS)
-    {
-        Physics.IgnoreCollision(states.capsule, aS.boxCollider);
-        aS.damage = states.rpg.GetDamage();
-        aS.friendlyLayer = friendlyLayer;
-        aS.rigidb.AddForce(aS.transform.forward * arrowLaunchForce);
-        aS.ownerForward = transform.forward;
+        states.rpg.weapons[0].LaunchMultipleArrowsHorizontally();
     }
 
 

@@ -12,6 +12,14 @@ public class BowAnimatorScript : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    private void Update()
+    {
+        if (wielder == null)
+            return;
+
+        SetAimBool(wielder.states.aim);
+    }
+
     public void SetAimBool(bool what)
     {
         animator.SetBool("aim", what);

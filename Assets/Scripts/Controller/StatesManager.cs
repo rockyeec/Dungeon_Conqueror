@@ -25,6 +25,17 @@ public class StatesManager : MonoBehaviour
         public float volumeScale = 0.4f;
     }
 
+    [System.Serializable]
+    public class MoveSet
+    {
+        public List<ActionWithCurve> fire1 = new List<ActionWithCurve>();
+        public ActionWithCurve fire2;
+        public ActionWithCurve fire3;
+        public ActionWithCurve fire4;
+        public string aimBool;
+    }
+
+
 
 
     [Header("Stats")]
@@ -35,10 +46,10 @@ public class StatesManager : MonoBehaviour
 
     [Header("Action Customization")]
     public ActionWithCurve dodgeAction = new ActionWithCurve();
-    public List<ActionWithCurve> attackComboListForFire1 = new List<ActionWithCurve>();
-    public ActionWithCurve attackActionForFire2 = new ActionWithCurve();
-    public ActionWithCurve attackActionForFire3 = new ActionWithCurve();
-    public ActionWithCurve aimAttackString;
+    //public List<ActionWithCurve> attackComboListForFire1 = new List<ActionWithCurve>();
+    //public ActionWithCurve attackActionForFire2 = new ActionWithCurve();
+    //public ActionWithCurve attackActionForFire3 = new ActionWithCurve();
+    //public ActionWithCurve aimAttackString;
     public ActionWithCurve drinkPotion;
     public ActionWithCurve pickUp;
     public ActionWithCurve pointAction;
@@ -300,11 +311,13 @@ public class StatesManager : MonoBehaviour
     
     void HandleDeath()
     {
-
         if (rpg.health.GetPercentage() <= 0 && !isDead)
         {
             isDead = true;
             OnDie();
+
+            //TEST!!! REMEMBER TO DELETE THIS
+            //aem.weapon.Unequip();
 
             if (deathClips.Count != 0)
                 audioSource.PlayOneShot(
@@ -598,17 +611,13 @@ public class StatesManager : MonoBehaviour
 
         if (aim)
         {
-            if (aem.shield != null)
+            if (rpg.shields[0] != null)
             {
                 animator.SetBool("block", true);
             }
-            else if (aem.bow != null)
-            {
-                animator.SetBool("aim", true);
-            }
             else
             {
-                animator.SetBool("look", true);
+               animator.SetBool(rpg.weapons[0].MoveSet.aimBool, true);
             }
         }
         else
@@ -617,10 +626,6 @@ public class StatesManager : MonoBehaviour
             animator.SetBool("aim", false);
             animator.SetBool("look", false);
         }
-
-
-        if (aem.bow != null)
-            aem.bow.bowArt.SetAimBool(aim);
     }
 
     void HandleActions()
@@ -745,8 +750,8 @@ public class StatesManager : MonoBehaviour
         if (fire1)
         {
             isFire2 = true; // gravity applies when jump attack
-            PerformActionWithCurve(attackComboListForFire1[attComboIndex], ref actionAnimation, ref isInAction);
-            if (attComboIndex < attackComboListForFire1.Count - 1)
+            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire1[attComboIndex], ref actionAnimation, ref isInAction);
+            if (attComboIndex < rpg.weapons[0].MoveSet.fire1.Count - 1)
             {
                 attComboIndex++;
             }
@@ -767,14 +772,14 @@ public class StatesManager : MonoBehaviour
         {
             fire2 = false;
             isFire2 = true; // gravity applies when jump attack
-            PerformActionWithCurve(attackActionForFire2, ref actionAnimation, ref isInAction);
+            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire2, ref actionAnimation, ref isInAction);
         }
 
         if (fire3)
         {
             isFire2 = true; // gravity applies when jump attack
             fire3 = false;
-            PerformActionWithCurve(attackActionForFire3, ref actionAnimation, ref isInAction);
+            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire3, ref actionAnimation, ref isInAction);
         }
 
         if (isPickUp)
@@ -796,7 +801,7 @@ public class StatesManager : MonoBehaviour
 
         if (aimFire && animator.GetBool("canAimAttack"))
         {
-            PerformActionWithCurve(aimAttackString, ref actionAnimation, ref isSlowMove);
+            PerformActionWithCurve(rpg.weapons[0].MoveSet.fire4, ref actionAnimation, ref isSlowMove);
         }
 
         if (point && animator.GetBool("canAimAttack"))
@@ -820,9 +825,9 @@ public class StatesManager : MonoBehaviour
         whichBool = true;
         damageMultiplier = a.damageMultiplier;
         rpg.stamina.ModifyCur(-a.staminaConsumption);
-        //audioSource.clip = a.audioClip;
-        if (GameMasterScript.Instance.audioSource != null)
-            GameMasterScript.Instance.audioSource.PlayOneShot(a.audioClip, a.volumeScale);
+        audioSource.PlayOneShot(a.audioClip);
+        //if (GameMasterScript.Instance.audioSource != null)
+        //    GameMasterScript.Instance.audioSource.PlayOneShot(a.audioClip, a.volumeScale);
         actionAnimationCurve = a.actionAnimationCurve;
         actionAnimation = a.actionAnimationName;
     }

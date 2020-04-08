@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquippableMeleeWeapon : Pickuppable, IEquippable
+public class EquippableMeleeWeapon : Pickuppable, IAttackable
 {
     public MeleeWeaponManager weapon;
     AnimatorEventManager wielder;
+
+    public StatesManager.MoveSet moveSet;
+    public StatesManager.MoveSet MoveSet
+    {
+        get { return moveSet; }
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -15,17 +22,21 @@ public class EquippableMeleeWeapon : Pickuppable, IEquippable
     
     public void Equip(AnimatorEventManager wielder)
     {
+        gameObject.SetActive(true);
+        SetRigidbodyActivity(false);
         this.wielder = wielder;
         LimitRightHand(true);
         weapon.wielder = wielder;
 
-        transform.parent = wielder.animator.GetBoneTransform(HumanBodyBones.RightHand);
+        transform.parent = wielder.rightHand;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
     }
 
     public void Unequip()
     {
+        gameObject.SetActive(true);
+        SetRigidbodyActivity(true);
         transform.parent = null;
 
         weapon.wielder = null;
@@ -33,8 +44,36 @@ public class EquippableMeleeWeapon : Pickuppable, IEquippable
         wielder = null;
     }
 
-   
-   void LimitRightHand(bool what)
+    public void Attack()
+    {
+        weapon.gameObject.SetActive(true);
+        weapon.isHit = false;
+        weapon.friendlyLayer = wielder.friendlyLayer;
+        weapon.ownerForward = transform.forward;
+        weapon.damage = wielder.states.rpg.GetDamage() * wielder.states.damageMultiplier;
+    }
+
+    public void EndAttack()
+    {
+        weapon.gameObject.SetActive(false);
+    }
+
+    public void LaunchArrow()
+    {
+       
+    }
+
+    public void LaunchMultipleArrowsVertically()
+    {
+        
+    }
+    public void LaunchMultipleArrowsHorizontally()
+    {
+       
+    }
+
+
+    void LimitRightHand(bool what)
     {
         wielder.animator.SetBool("limitRightHand", what);
     }

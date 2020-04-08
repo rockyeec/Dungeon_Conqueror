@@ -105,9 +105,15 @@ public class RPGManager : MonoBehaviour
     float defence;
     float stamRegenRate;
 
-    
+
 
     // Inventory
+    [HideInInspector]
+    public List<Pickuppable> generalStuff = new List<Pickuppable>();
+    [HideInInspector]
+    public List<IAttackable> weapons = new List<IAttackable>();
+    [HideInInspector]
+    public List<EquippableShield> shields = new List<EquippableShield>();
     [HideInInspector]
     public List<Queue<PotionScript>> potions = new List<Queue<PotionScript>>();
     [HideInInspector]

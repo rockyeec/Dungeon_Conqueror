@@ -10,15 +10,17 @@ public class EquippableShield : Pickuppable, IEquippable
 
     public void Equip(AnimatorEventManager wielder)
     {
+        SetRigidbodyActivity(false);
         this.wielder = wielder;
 
-        transform.parent = wielder.animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+        transform.parent = wielder.leftArm;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
     }
 
     public void Unequip()
     {
+        SetRigidbodyActivity(true);
         transform.parent = null;
 
         wielder = null;

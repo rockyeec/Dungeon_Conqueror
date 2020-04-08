@@ -43,8 +43,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3647624, y: 0.09199014, z: 0.2220915}
-  m_Center: {x: -0.0019612412, y: -0.0035661343, z: 0.5216838}
+  m_Size: {x: 0.3647624, y: 0.15241125, z: 0.4046684}
+  m_Center: {x: -0.001960805, y: -0.00020459249, z: 0.4303934}
 --- !u!114 &4351903576893783788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,6 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4028353363950500641}
   - component: {fileID: -3019693049813262633}
+  - component: {fileID: 7635520173473371710}
   m_Layer: 0
   m_Name: Double Edged Axe
   m_TagString: Untagged
@@ -138,7 +139,154 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d4d1990da90a14e92665af02b5592c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rigidBody: {fileID: 0}
   weapon: {fileID: 4351903576893783788}
+  moveSet:
+    fire1:
+    - actionAnimationName: Warrior Attack 1
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 4.6704
+          outSlope: 4.6704
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.013428119
+        - serializedVersion: 3
+          time: 0.9992676
+          value: 0.0015144348
+          inSlope: -0.60785186
+          outSlope: -0.60785186
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.09728512
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
+      staminaConsumption: 3
+      damageMultiplier: 1
+      volumeScale: 0
+    - actionAnimationName: Warrior Attack 2
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.0030288696
+          inSlope: 4.7793922
+          outSlope: 4.7793922
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.014218009
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: -0.0030288696
+          outSlope: -0.0030288696
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 0
+      audioClip: {fileID: 8300000, guid: 902740e269a6304468ed1c50b4f23de4, type: 3}
+      staminaConsumption: 2.5
+      damageMultiplier: 1.5
+      volumeScale: 0
+    fire2:
+      actionAnimationName: Warrior Jump Attack
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.0030288696
+          inSlope: 7.7856684
+          outSlope: 7.7856684
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.013437962
+        - serializedVersion: 3
+          time: 0.9992676
+          value: 0.004547119
+          inSlope: 0.0015193623
+          outSlope: 0.0015193623
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      audioClip: {fileID: 8300000, guid: e0df061951c0ce44b8eea145fcda84a0, type: 3}
+      staminaConsumption: 6
+      damageMultiplier: 3
+      volumeScale: 0.4
+    fire3:
+      actionAnimationName: Warrior Area Attack
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.0015144348
+          inSlope: 5.8932195
+          outSlope: 5.8932195
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.065713234
+        - serializedVersion: 3
+          time: 0.99768066
+          value: 0
+          inSlope: -4.837942
+          outSlope: -4.837942
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.019747341
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      audioClip: {fileID: 8300000, guid: 902740e269a6304468ed1c50b4f23de4, type: 3}
+      staminaConsumption: 3
+      damageMultiplier: 1.8
+      volumeScale: 0.4
+    fire4:
+      actionAnimationName: Warrior Heavy Attack 1
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
+      staminaConsumption: 3
+      damageMultiplier: 1
+      volumeScale: 0.4
+    aimBool: look
+--- !u!65 &7635520173473371710
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762052598100337266}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.23563164, y: 0.10478401, z: 0.9442818}
+  m_Center: {x: 0.16605613, y: -0.045408964, z: 0.26548672}
 --- !u!1001 &7676470971935821715
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -143,20 +143,5 @@ public class PotionScript : Pickuppable
         gameObject.SetActive(false);
     }
 
-    void SetRigidbodyActivity(bool to)
-    {
-        boxCollider.enabled = to;
-        rigidBody.useGravity = to;
-
-        if (to)
-        {
-            rigidBody.drag = 0;
-            rigidBody.constraints = RigidbodyConstraints.None;
-        }
-        else
-        {
-            rigidBody.drag = 1000;
-            rigidBody.constraints = RigidbodyConstraints.FreezeAll;
-        }
-    }
+   
 }

@@ -114,137 +114,6 @@ MonoBehaviour:
     staminaConsumption: 4
     damageMultiplier: 0
     volumeScale: 0.4
-  attackComboListForFire1:
-  - actionAnimationName: Warrior Heavy Attack 1
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0.003112793
-        value: 0.21152496
-        inSlope: 0.62323296
-        outSlope: 0.62323296
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.0451375
-      - serializedVersion: 3
-        time: 0.99380994
-        value: 0.21072781
-        inSlope: -1.9753934
-        outSlope: -1.9753934
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.01244349
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
-    audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
-    staminaConsumption: 5.5
-    damageMultiplier: 2.4
-    volumeScale: 0.4
-  - actionAnimationName: Warrior Heavy Attack 2
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0.046103545
-        outSlope: 0.046103545
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.05524862
-      - serializedVersion: 3
-        time: 1.0000486
-        value: -0.002000593
-        inSlope: -3.480397
-        outSlope: -3.480397
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.00950028
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
-    audioClip: {fileID: 8300000, guid: 902740e269a6304468ed1c50b4f23de4, type: 3}
-    staminaConsumption: 5.5
-    damageMultiplier: 2.4
-    volumeScale: 0.4
-  attackActionForFire2:
-    actionAnimationName: Warrior Jump Attack
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 5.518041
-        outSlope: 5.518041
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.013417522
-      - serializedVersion: 3
-        time: 0.9984131
-        value: 0.004547119
-        inSlope: 0.50283843
-        outSlope: 0.50283843
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.03078136
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
-    staminaConsumption: 8
-    damageMultiplier: 3
-    volumeScale: 0.4
-  attackActionForFire3:
-    actionAnimationName: Warrior Area Attack
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 4.8073606
-        outSlope: 4.8073606
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.014996054
-      - serializedVersion: 3
-        time: 1.0031738
-        value: 0.0015144348
-        inSlope: -4.1060143
-        outSlope: -4.1060143
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.111823656
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: 902740e269a6304468ed1c50b4f23de4, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 2.5
-    volumeScale: 0.4
-  aimAttackString:
-    actionAnimationName: Warrior Attack Stab
-    actionAnimationCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    audioClip: {fileID: 8300000, guid: bb2c2cc68090c3446847df8cc2f5891c, type: 3}
-    staminaConsumption: 4
-    damageMultiplier: 1
-    volumeScale: 0.4
   drinkPotion:
     actionAnimationName: 
     actionAnimationCurve:
@@ -292,6 +161,7 @@ MonoBehaviour:
   dieScript: {fileID: 0}
   capsule: {fileID: 0}
   aem: {fileID: 0}
+  ikManager: {fileID: 0}
   vertical: 0
   horizontal: 0
   sprint: 0
@@ -490,6 +360,8 @@ MonoBehaviour:
   startStamRegenRate: 2.5
   minDamage: 5
   maxDamage: 8
+  generalStuff: []
+  shields: []
   statModifier: []
 --- !u!114 &-44975579904345453
 MonoBehaviour:
@@ -507,8 +379,8 @@ MonoBehaviour:
   ui: {fileID: 0}
   lockonDist: 25
   states: {fileID: 0}
-  stopDistance: 4
-  backOffDistance: 3
+  stopDistance: 2.8
+  backOffDistance: 1.44
   hostileLayer: 10
   lastTargetPosition: {x: 0, y: 0, z: 0}
   pathRequestOrderPlaced: 0

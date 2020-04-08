@@ -72,6 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 946886569354375217}
   - component: {fileID: 566869886387112786}
+  - component: {fileID: 1776543976275644179}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -107,9 +108,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c71645d1cc416f145acd4157e0d1ad7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rigidBody: {fileID: 0}
   wielder: {fileID: 0}
   bowArt: {fileID: 667333207282096552}
   fakeArrow: {fileID: 2019543056847965408}
+  moveSet:
+    fire1:
+    - actionAnimationName: Archer Attack 1 Ready
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+      audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
+      staminaConsumption: 3
+      damageMultiplier: 1.2
+      volumeScale: 0
+    fire2:
+      actionAnimationName: Archer Attack 2 Ready
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
+      staminaConsumption: 5
+      damageMultiplier: 0.88
+      volumeScale: 0.4
+    fire3:
+      actionAnimationName: Archer Attack 3 Ready
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
+      staminaConsumption: 3
+      damageMultiplier: 0.88
+      volumeScale: 0.4
+    fire4:
+      actionAnimationName: Archer Aim Attack
+      actionAnimationCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      audioClip: {fileID: 8300000, guid: 2a61a902f90d9b141b7332a01c7e0222, type: 3}
+      staminaConsumption: 3
+      damageMultiplier: 2.5
+      volumeScale: 0.4
+    aimBool: aim
+--- !u!65 &1776543976275644179
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6726112655713797247}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5147511, y: 0.13243997, z: 1.1728957}
+  m_Center: {x: -0.04159397, y: -0.005016744, z: 0.026927114}
 --- !u!1 &8232594442421012004
 GameObject:
   m_ObjectHideFlags: 0

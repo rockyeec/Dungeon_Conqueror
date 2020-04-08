@@ -15,7 +15,7 @@ public class ObjectPool : MonoBehaviour
     [System.Serializable]
     public class PoolInit
     {
-        public string key;
+        //public string key;
         public GameObject prefab;
         public int initialAmount;        
     }
@@ -46,7 +46,7 @@ public class ObjectPool : MonoBehaviour
         foreach (PoolInit item in poolList)
         {
             Pool temp = new Pool(item.prefab, item.initialAmount);
-            poolDic.Add(item.key, temp);
+            poolDic.Add(item.prefab.name + "(Clone)", temp);
         }
 
         foreach  (KeyValuePair<string, Pool> item in poolDic)
@@ -59,7 +59,7 @@ public class ObjectPool : MonoBehaviour
             }
         }
 
-        SpawnManager.Instance.Init();
+        GameMasterScript.Instance.Init();
         AwardManager.Instance.Init();
     }
 
@@ -94,3 +94,4 @@ public class ObjectPool : MonoBehaviour
         poolDic[key].prefabs.Enqueue(toBeReturned);
     }
 }
+

@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6407145150502412413
 Transform:
   m_ObjectHideFlags: 0
@@ -123,7 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a406a60fd938eac489a71022a1e91f40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blood: {fileID: 3617972607939732330, guid: 5a335696990b1564a8ac3f8c46e96d29, type: 3}
-  sparks: {fileID: 3617972607939732330, guid: bc2a1173305abb049bcda4fa2f70fda9, type: 3}
   damage: 25
+  friendlyLayer: 10
+  isHit: 0
+  aem: {fileID: 0}
   rigidb: {fileID: 0}
+  boxCollider: {fileID: 0}

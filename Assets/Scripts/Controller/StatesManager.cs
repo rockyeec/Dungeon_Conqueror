@@ -21,6 +21,8 @@ public class StatesManager : MonoBehaviour
         public AudioClip audioClip;
         public float staminaConsumption;
         public float damageMultiplier;
+        [HideInInspector]
+        public float volumeScale = 0.4f;
     }
 
 
@@ -38,26 +40,30 @@ public class StatesManager : MonoBehaviour
     public ActionWithCurve attackActionForFire3 = new ActionWithCurve();
     public ActionWithCurve aimAttackString;
     public ActionWithCurve drinkPotion;
+    public ActionWithCurve pickUp;
+    public ActionWithCurve pointAction;
 
     [Header("Test Attributes (Temporary)")]
     public float maxEnemyTargetDistance = 10;
+    public AudioClip shoutFollowMe;
 
     // Lockon Attributes
     [HideInInspector] public GameObject deadBody;
     [HideInInspector] public InputParent enemyTarget;
     [HideInInspector] public Transform lookTransform;
     //[HideInInspector] public StatesManager engagedBy;
-    
+
 
 
     // Components
     /*[HideInInspector]*/
-    public Animator animator;
+    [HideInInspector] public Animator animator;
     [HideInInspector] public Rigidbody rigidBody;
     [HideInInspector] public RPGManager rpg;
     [HideInInspector] public DieScript dieScript;
     [HideInInspector] public CapsuleCollider capsule;
     [HideInInspector] public AnimatorEventManager aem;
+    [HideInInspector] public IKManager ikManager;
 
     // Input
     [HideInInspector] public float vertical;
@@ -73,6 +79,10 @@ public class StatesManager : MonoBehaviour
     [HideInInspector] public bool dodge;
     [HideInInspector] public bool jump;
     [HideInInspector] public Vector3 lookPosition;
+    [HideInInspector] public bool isPickUp;
+    [HideInInspector] public bool walk;
+    [HideInInspector] public bool point;
+    [HideInInspector] public bool followMe;
 
     // States
     [HideInInspector] public float moveAmount;
@@ -113,18 +123,31 @@ public class StatesManager : MonoBehaviour
     // Lockon
     [HideInInspector] public bool triggerNextLockon = false;
 
+    // Potion
+    [HideInInspector] public Transform potionHand;
+    [HideInInspector] public PotionScript currentPotion;
+    [HideInInspector] public int potionIndex = 0;
+    [HideInInspector] public bool havePotion;
 
     // Death Bool
     [HideInInspector] public bool isDead = false;
+    [SerializeField] List<AudioClip> deathClips = new List<AudioClip>();
 
 
     // Events
 
     public event Action OnRevive = delegate { };
 
-    public event Action<InputParent> FillUpEnemyTarget = delegate { };
+    public event Action OnDie = delegate { };
 
-    public event Action EmptyEnemyTarget = delegate { };
+    public event Action<InputParent> OnFillUpEnemyTarget = delegate { };
+
+    public event Action OnEmptyEnemyTarget = delegate { };
+
+    public event Action<PotionScript> OnDrink = delegate { };
+
+
+    
 
 
 
@@ -135,7 +158,10 @@ public class StatesManager : MonoBehaviour
     {
         if (animator.gameObject.activeSelf)
         {
-            animator.CrossFade("Hurt", 0.2f);
+            if (damage > 0.1f * rpg.health.max)
+            {
+                animator.CrossFade("Hurt", 0.2f);
+            }
             actionAnimationCurve = null;
             rpg.health.ModifyCur(-damage);
         }
@@ -143,17 +169,30 @@ public class StatesManager : MonoBehaviour
 
     public void LockonOn(InputParent enemy)
     {
-        FillUpEnemyTarget(enemy);
+        OnFillUpEnemyTarget(enemy);
+
+        lockon = true;
+        enemyTarget = enemy;
+        lookTransform = enemyTarget.states.aem.body;
     }
 
     public void LockOff()
     {
-        EmptyEnemyTarget();
+        lockon = false;
+        if (enemyTarget == null) return;
+
+
+        enemyTarget = null;
+        lookTransform = null;
+
+        
+        OnEmptyEnemyTarget();
     }
 
-    public void Revive()
+    public void Revive(int level)
     {
         isDead = false;
+        rpg.UpdateStatsAccordingToLevel(level);
         rpg.health.Reset();
         rpg.stamina.Reset();
         deadBody.GetComponent<DieScript>().enabled = false;
@@ -163,6 +202,7 @@ public class StatesManager : MonoBehaviour
         capsule.enabled = true;
         GetComponent<InputParent>().enabled = true;
         OnRevive();
+        LockOff();
     }
 
 
@@ -174,6 +214,8 @@ public class StatesManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         dieScript = GetComponentInChildren<DieScript>();
+        dieScript.Init();
+        dieScript.states = this;
         deadBody = dieScript.gameObject;
         deadBody.SetActive(false);
         rpg.Init();
@@ -183,11 +225,15 @@ public class StatesManager : MonoBehaviour
         aem = GetComponentInChildren<AnimatorEventManager>();
         aem.Init();
         animator = aem.animator;
+        ikManager = aem.GetComponent<IKManager>();
+        ikManager.Init(this);
 
+        PotionHandIdentifier potionHand = GetComponentInChildren<PotionHandIdentifier>();
+        if (potionHand != null)
+            this.potionHand = potionHand.transform;
 
-        FillUpEnemyTarget += StatesManager_FillUpEnemyTarget;
-        EmptyEnemyTarget += StatesManager_EmptyEnemyTarget;
     }
+
 
     public void Tick(float delta)
     {
@@ -197,13 +243,16 @@ public class StatesManager : MonoBehaviour
 
         if (!animator.gameObject.activeSelf) return;
 
-        rpg.Tick();
-
         HandleLockon();
 
         SettleCooldowns();
 
         HandleStaminaActions();
+    }
+
+    public void LateTick()
+    {
+        HandleMoveAnimation();
     }
 
     public void FixedTick(float fixedDelta)
@@ -220,9 +269,7 @@ public class StatesManager : MonoBehaviour
 
         HandleRotation();
 
-        HandleMoveAnimation();
-
-        //rigidBody.drag = ((moveAmount > 0 && CanMove()) || !onGround || isFire2) ? 0 : 4;
+        //rigidBody.drag = ((moveAmount > 0 && CanMove()) || !onGround) ? 0 : 4;
 
         //if (isWall) return;
 
@@ -231,6 +278,7 @@ public class StatesManager : MonoBehaviour
         if (!CanMove()) return;
 
         HandleMovement();
+
     }
 
 
@@ -253,16 +301,19 @@ public class StatesManager : MonoBehaviour
     void HandleDeath()
     {
 
-        if (rpg.health.GetPercentage() <= 0)
+        if (rpg.health.GetPercentage() <= 0 && !isDead)
         {
             isDead = true;
+            OnDie();
 
-            /*if (engagedBy != null)
-            {
-                StatesManager temp = engagedBy;
-                engagedBy.LockOff();
-               // temp.triggerNextLockon = true; // to be turned off by respective input manager
-            }*/
+            if (deathClips.Count != 0)
+                audioSource.PlayOneShot(
+                    deathClips[
+                        UnityEngine.Random.Range(
+                            0,
+                            deathClips.Count)
+                            ]
+                        );
 
             deadBody.SetActive(true);
             deadBody.GetComponent<DieScript>().enabled = true;
@@ -286,7 +337,6 @@ public class StatesManager : MonoBehaviour
         CoolDownAction();
         CoolDownSlowMoveAction();
     }
-
     
     void HandleJump()
     {
@@ -391,24 +441,7 @@ public class StatesManager : MonoBehaviour
     
 
 
-    private void StatesManager_EmptyEnemyTarget()
-    {
-        lockon = false;
-        if (enemyTarget == null) return;
-        //enemyTarget.states.engagedBy = null;
-        
-
-        enemyTarget = null;
-        lookTransform = null;
-    }
-
-    private void StatesManager_FillUpEnemyTarget(InputParent enemy)
-    {
-        lockon = true;
-        enemyTarget = enemy;
-        //enemy.states.engagedBy = this;
-        lookTransform = enemyTarget.states.aem.body;
-    }
+    
 
 
     void HandleLockon()
@@ -432,12 +465,23 @@ public class StatesManager : MonoBehaviour
         
     }
 
+    void HandleMoveAmount()
+    {
+        if (animator.GetBool("slowMovement") || walk)
+        {
+            moveAmount = 0.5f;
+        }
+    }
+
     void HandleMovement()
     {
-        if (animator.GetBool("slowMovement")) moveAmount *= 0.5f;
-        float curSpeed = rpg.moveSpeed * (!sprint ? 1 : 1.85f) * moveAmount;
+        HandleMoveAmount();
+
+        float speedMultiplier = rpg.GetSpeed();
+        float curSpeed = speedMultiplier * (!sprint ? 1 : 1.85f) * moveAmount;
         float animSpeed = sprint ? 1.3f : 1;
         animator.SetFloat("moveSpeed", aim ? 1 : animSpeed);
+        animator.SetFloat("speedMultiplier", speedMultiplier / 3.5f);
 
         Vector3 addGravity = moveDirection * curSpeed;
 
@@ -504,29 +548,79 @@ public class StatesManager : MonoBehaviour
         if (sprint)
         {
             if (rpg.EnoughStamina())
-                rate *= -1;
+                rate *= 0;
+            rpg.stamina.ModifyCur(-delta * 2.5f);
         }
 
         rpg.RegenStamina(rate);
+
+        rpg.RegenHealth(delta);
     }
 
     void HandleMoveAnimation()
     {
+        HandleMoveAmount();
+
         if (lockon || aim)
         {
-            animator.SetBool("lockon", true);
-            animator.SetFloat("vertical", vertical * moveAmount, 0.1f, fixedDelta);
-            animator.SetFloat("horizontal", horizontal * moveAmount, 0.1f, fixedDelta);
+            if (lockon)
+                animator.SetBool("lockon", true);
+
+            animator.SetFloat("vertical",
+                vertical * moveAmount,
+                0.1f,
+                fixedDelta);
+
+            animator.SetFloat("horizontal",
+                horizontal * moveAmount,
+                0.1f,
+                fixedDelta);
         }
         else
         {
             animator.SetBool("lockon", false);
-            animator.SetFloat("vertical", moveAmount, 0.3f, fixedDelta);
+            if (rigidBody.velocity.magnitude < 0.3f)
+            {
+                animator.SetFloat("vertical", 0, 0.3f, fixedDelta);
+            }
+            else
+            {
+                animator.SetFloat("vertical", 
+                    moveAmount,
+                    0.3f,
+                    fixedDelta);
+            }
+            
             animator.SetFloat("horizontal", 0);
         }
 
         animator.SetBool("sprint", sprint);
-        animator.SetBool("aim", aim);
+
+        if (aim)
+        {
+            if (aem.shield != null)
+            {
+                animator.SetBool("block", true);
+            }
+            else if (aem.bow != null)
+            {
+                animator.SetBool("aim", true);
+            }
+            else
+            {
+                animator.SetBool("look", true);
+            }
+        }
+        else
+        {
+            animator.SetBool("block", false);
+            animator.SetBool("aim", false);
+            animator.SetBool("look", false);
+        }
+
+
+        if (aem.bow != null)
+            aem.bow.bowArt.SetAimBool(aim);
     }
 
     void HandleActions()
@@ -623,11 +717,11 @@ public class StatesManager : MonoBehaviour
 
     void CoolDownSlowMoveAction()
     {
-        if (isInAction)
+        if (isSlowMove)
         {
             isSlowMoveBuffer += delta;
             if (isSlowMoveBuffer >= 0.16f
-                && animator.GetBool("slowMovement"))
+                && !animator.GetBool("slowMovement"))
             {
                 isSlowMoveBuffer = 0;
                 isSlowMove = false;
@@ -683,19 +777,38 @@ public class StatesManager : MonoBehaviour
             PerformActionWithCurve(attackActionForFire3, ref actionAnimation, ref isInAction);
         }
 
-        if (drink && rpg.potions.Count != 0)
+        if (isPickUp)
+        {
+            isPickUp = false;
+            PerformActionWithCurve(pickUp, ref actionAnimation, ref isInAction);
+        }
+
+        if (drink 
+            && havePotion
+            && potionHand != null
+            && !isSlowMove)
         {
             PerformActionWithCurve(drinkPotion, ref actionAnimation, ref isSlowMove);
-
-            // temporary test            
-            rpg.potions[0].UsePotion(rpg);
-            rpg.potions.RemoveAt(UnityEngine.Random.Range(0, rpg.potions.Count));
-            
+            currentPotion = rpg.potions[potionIndex].Dequeue();
+            OnDrink(currentPotion);
+            currentPotion.UsePotion(this);            
         }
 
         if (aimFire && animator.GetBool("canAimAttack"))
         {
             PerformActionWithCurve(aimAttackString, ref actionAnimation, ref isSlowMove);
+        }
+
+        if (point && animator.GetBool("canAimAttack"))
+        {
+            PerformActionWithCurve(pointAction, ref actionAnimation, ref isSlowMove);
+        }
+
+        if (followMe)
+        {
+            aem.FollowMe();
+            if (GameMasterScript.Instance.audioSource != null)
+                GameMasterScript.Instance.audioSource.PlayOneShot(shoutFollowMe, 0.7f);
         }
 
         return actionAnimation;
@@ -707,8 +820,9 @@ public class StatesManager : MonoBehaviour
         whichBool = true;
         damageMultiplier = a.damageMultiplier;
         rpg.stamina.ModifyCur(-a.staminaConsumption);
-        audioSource.clip = a.audioClip;
-        audioSource.Play();
+        //audioSource.clip = a.audioClip;
+        if (GameMasterScript.Instance.audioSource != null)
+            GameMasterScript.Instance.audioSource.PlayOneShot(a.audioClip, a.volumeScale);
         actionAnimationCurve = a.actionAnimationCurve;
         actionAnimation = a.actionAnimationName;
     }

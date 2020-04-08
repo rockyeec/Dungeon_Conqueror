@@ -13,24 +13,14 @@ public class AwardManager : MonoBehaviour
     {
         Instance = this;        
     }
-
-    /*private void Start()
-    {
-        StartCoroutine(WaitForSpawnManager());
-    }*/
-
-    /*IEnumerator WaitForSpawnManager()*/
     public void Init()
     {
-       /* yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();*/
-
-        playerStats = SpawnManager.thePlayer.states.rpg;
+        playerStats = GameMasterScript.thePlayer.states.rpg;
     }
 
     public void GiveXP(float amount)
     {
-        playerStats.experience.ModifyCur(amount);
+        playerStats.TriggerGiveXP(amount);
     }
 
 }

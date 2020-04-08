@@ -12,6 +12,7 @@ public class CameraManager : MonoBehaviour
     public float mouseSensitivity = 2;
     public Vector2 pitchMinMax = new Vector2(-40, 40);
     public float followSpeed = 8;
+    [HideInInspector] public float currentFollowSpeed;
 
     public float lockonPitchAdjustment = 0.7f;
 
@@ -53,12 +54,12 @@ public class CameraManager : MonoBehaviour
     }
     void FollowTarget()
     {
-        Vector3 p = 
+        Vector3 p =
             Vector3.Lerp
             (
                 transform.position,
                 target.position,
-                delta * followSpeed
+                delta * currentFollowSpeed
             );
         transform.position = p;
     }

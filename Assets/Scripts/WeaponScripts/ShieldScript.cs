@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ShieldScript : MonoBehaviour
 {
-    public bool parryWindow;
+    [HideInInspector] public bool parryWindow;
     private void OnEnable()
     {
         StopCoroutine(Parry());

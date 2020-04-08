@@ -8,11 +8,13 @@ public class ArrowSript : WeaponManager
 
     [HideInInspector]
     public Rigidbody rigidb;
+    [HideInInspector]
+    public BoxCollider boxCollider;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         rigidb = GetComponent<Rigidbody>();
+        boxCollider = GetComponent<BoxCollider>();
     }
 
     private void OnEnable()
@@ -26,34 +28,31 @@ public class ArrowSript : WeaponManager
         yield return new WaitForSeconds(1.45f);
 
         StartCoroutine(StopRigidbody());
-
-        yield return new WaitForFixedUpdate();
-        yield return new WaitForFixedUpdate();
-
-        ObjectPool.Instance.ReturnObject(name, gameObject);
     }
 
     IEnumerator StopRigidbody()
     {
         rigidb.isKinematic = true;
-        yield return new WaitForFixedUpdate();
+        // kiasu wait 3 frames
+        for (int i = 0; i < 3; i++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
         rigidb.isKinematic = false;
+        ObjectPool.Instance.ReturnObject(name, gameObject);
     }
 
     protected void OnCollisionEnter(Collision collision)
     {
-
-        if (collision.gameObject.layer != 8)
+        if (!isAlreadyAttacked)
         {
-            if (!isAlreadyAttacked)
-            {
-                isAlreadyAttacked = true;
-                HurtPeople(collision.gameObject);
-            }
-            else
-            {
-                ObjectPool.Instance.GetObject("Sparks(Clone)", transform.position, Quaternion.LookRotation(-transform.forward));
-            }
+            HurtPeople(collision.gameObject);
+            isAlreadyAttacked = true;
+            //Debug.Log("Hey, Im the problem");
+        }
+        else
+        {
+            ObjectPool.Instance.GetObject("Sparks(Clone)", transform.position, Quaternion.LookRotation(-transform.forward));
         }
     }
 }

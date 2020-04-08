@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4487842519602673871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4487842519602673869}
+  - component: {fileID: 4487842519602673868}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4487842519602673869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4487842519602673871}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4487842519602673868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4487842519602673871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df03cf677ba10ec4587cd124588c2d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolList:
+  - key: Potion(Clone)
+    prefab: {fileID: 8084637701146840126, guid: 5cb8a8befd0db074aa7640eb87163c00,
+      type: 3}
+    initialAmount: 120
+  - key: Blood(Clone)
+    prefab: {fileID: 3617972607939732330, guid: 5a335696990b1564a8ac3f8c46e96d29,
+      type: 3}
+    initialAmount: 250
+  - key: Sparks(Clone)
+    prefab: {fileID: 3617972607939732330, guid: bc2a1173305abb049bcda4fa2f70fda9,
+      type: 3}
+    initialAmount: 250
+  - key: Enemy_Warrior(Clone)
+    prefab: {fileID: 5773779560252307953, guid: 1a1a86157ae099c43a3316694159735d,
+      type: 3}
+    initialAmount: 125
+  - key: Boss(Clone)
+    prefab: {fileID: 5773779560252307953, guid: 39a8537ff5cd39b46bd6b934f59660f6,
+      type: 3}
+    initialAmount: 1
+  - key: Controller Warrior(Clone)
+    prefab: {fileID: 7267377330263380795, guid: 4063efab2574fba42927c697b3cf58cd,
+      type: 3}
+    initialAmount: 1
+  - key: Controller Archer(Clone)
+    prefab: {fileID: 6316920703542370483, guid: 0f6d8d097439e86409d4d23ca9c3fc9a,
+      type: 3}
+    initialAmount: 1
+  - key: Enemy_Archer(Clone)
+    prefab: {fileID: 6316920703542370483, guid: 6e7b483b8ef1edf46b28613ecafb0351,
+      type: 3}
+    initialAmount: 125
+  - key: Blue Sparks(Clone)
+    prefab: {fileID: 3617972607939732330, guid: 0c0956d2676b36b49ae9efe8f1770295,
+      type: 3}
+    initialAmount: 75
+  - key: Controller Mage(Clone)
+    prefab: {fileID: 7267377330263380795, guid: 642f89fc9af607b43ba78fe8e84eac61,
+      type: 3}
+    initialAmount: 1
+  - key: Ally_Flesh_Golem(Clone)
+    prefab: {fileID: 5773779560252307953, guid: 212bc3c9c669291459bb2559f7ed40f7,
+      type: 3}
+    initialAmount: 25
+  - key: Fire(Clone)
+    prefab: {fileID: 3617972607939732330, guid: b52b90d9f6724a84b9087ac45bcf6bb5,
+      type: 3}
+    initialAmount: 25
+  - key: Enemy_Brute(Clone)
+    prefab: {fileID: 5773779560252307953, guid: da46f0c165d7f75428e6fbf256246a18,
+      type: 3}
+    initialAmount: 75
+  - key: Arrow_Prefab(Clone)
+    prefab: {fileID: 4751566988456248797, guid: 8d23a530b22e30b40a7b4c2c372a05b9,
+      type: 3}
+    initialAmount: 125

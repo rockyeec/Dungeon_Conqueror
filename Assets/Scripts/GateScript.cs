@@ -8,7 +8,7 @@ public class GateScript : MonoBehaviour
 
     private void Start()
     {
-        gate = GetComponentInParent<Rigidbody>();
+        //gate = GetComponentInParent<Rigidbody>();
     }
 
     private void OnTriggerEnter(Collider other)

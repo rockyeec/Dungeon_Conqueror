@@ -1,14 +1,14 @@
 fileFormatVersion: 2
 guid: 9aa11d4a6a51a26469ec4546d24204aa
 ModelImporter:
-  serializedVersion: 26
+  serializedVersion: 19300
   internalIDToNameTable:
   - first:
       74: -203655887218126122
     second: Walk Strafe Right
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -41,7 +41,7 @@ ModelImporter:
       firstFrame: 0
       lastFrame: 44
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: -50
       level: 0
       cycleOffset: 0
       loop: 0
@@ -115,7 +115,6 @@ ModelImporter:
     normalSmoothingSource: 0
   referencedClips: []
   importAnimation: 1
-  copyAvatar: 1
   humanDescription:
     serializedVersion: 3
     human:
@@ -916,8 +915,10 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9c1755256333f49449dd06bdcbb3e128,
     type: 3}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 2
   additionalBone: 0
   userData: 
   assetBundleName: 

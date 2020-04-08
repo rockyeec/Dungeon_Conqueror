@@ -142,8 +142,8 @@ public class UIManager : MonoBehaviour
 
     public void UpdateStatus()
     {
-        curAttack = (int)((rpg.minDamage + rpg.maxDamage) / 2);
-        curSpeed = (int)rpg.moveSpeed;
+        curAttack = (int)((rpg.minDamage + rpg.maxDamage) / 2 + rpg.statModifier[3]);
+        curSpeed = (int)rpg.GetSpeed();
 
 
         statAttack.text = curAttack.ToString();

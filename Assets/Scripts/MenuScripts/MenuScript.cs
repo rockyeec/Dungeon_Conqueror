@@ -50,7 +50,7 @@ public class MenuScript : MonoBehaviour
     public void ChooseMage()
     {
         characterClass = CharacterClass.MAGE;
-        //StartGame();
+        StartGame();
     }
 
     void StartGame()

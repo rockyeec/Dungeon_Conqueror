@@ -6,19 +6,29 @@ using System;
 
 public class InputManager : InputParent
 {
-    float delta;
-    float fixedDelta;
     CameraManager cameraManager;
     Camera mainCam;
     GameObject crossHair;
     GameObject UIScreen;
+    GameObject toolTip;
 
-    public TextMeshProUGUI potionCounter;
+    public TextMeshProUGUI potionText;
+    public TextMeshProUGUI currentLevel;
+    public TextMeshProUGUI statsText;
 
+    // RPG Strings for Display
+    string zombies = null;
+    string healthRegen = null;
+    string staminaRegen = null;
+    string speed = null;
+    string damage = null;
+    string defence = null;
+
+
+    // Timers For Hold and Tap
     float fireTimer = 0;
     float sprintTimer = 0;
-
-    
+        
 
     // Attack Bools for GetButtonDown simulation
     bool triggerFire2 = false;
@@ -36,10 +46,15 @@ public class InputManager : InputParent
     // bools for snappy lockon switching
     bool canSwitchTarget = true;
 
+
+
+
     private void Start()
     {
-        states.FillUpEnemyTarget += States_FillUpEnemyTarget;
-        states.EmptyEnemyTarget += States_EmptyEnemyTarget;
+        states.OnFillUpEnemyTarget += States_OnFillUpEnemyTarget;
+        states.OnEmptyEnemyTarget += States_OnEmptyEnemyTarget;
+        states.rpg.OnLevelUp += Rpg_OnLevelUp;
+        states.rpg.OnDrinkPotion += Rpg_OnDrinkPotion;
 
 
         GetComponentInChildren<AnimatorEventManager>().friendlyLayer = 10;
@@ -54,38 +69,72 @@ public class InputManager : InputParent
         ui.rpg = states.rpg;
         UIScreen = ui.transform.parent.gameObject;
         UIScreen.SetActive(false);
+        toolTip = GetComponentInChildren<ToolTipIdentifier>().gameObject;
+        toolTip.SetActive(false);
 
 
-
-        potionCounter = GetComponentInChildren<PotionCounterIdentifier>().GetComponent<TextMeshProUGUI>();
-        potionCounter.text = "Potions x" + states.rpg.potions.Count.ToString();
+        potionText = GetComponentInChildren<PotionCounterIdentifier>().GetComponent<TextMeshProUGUI>();
+        potionText.text = " ";
+        currentLevel = GetComponentInChildren<LevelTextIdentifier>().GetComponent<TextMeshProUGUI>();
+        UpdateLevelText();
+        statsText = GetComponentInChildren<StatsIdentifier>().GetComponent<TextMeshProUGUI>();
+        UpdateStatsText();
     }
 
-
-    private void Update()
+    private void Rpg_OnDrinkPotion()
     {
-        delta = Time.deltaTime;
-        GetInput();
-        states.Tick(delta);
-
-        crossHair.SetActive(states.aim || states.lockon);
+        UpdateStatsText();
     }
 
-    private void FixedUpdate()
+    private void Rpg_OnLevelUp()
     {
-        fixedDelta = Time.fixedDeltaTime;
-        states.FixedTick(fixedDelta);
+        UpdateStatsText();
+        UpdateLevelText();
+    }
+
+    public override void UpdateStatsText()
+    {
+        int maxZombies = states.rpg.level + 5;
+        zombies = states.aem.zombies.Count == 0 ? "\n " : ("\nZombies: " + states.aem.zombies.Count + " / " + maxZombies);
+        healthRegen = "\nHealth Regen: " + states.rpg.statModifier[0];
+        staminaRegen = "\nStamina Regen: " + states.rpg.statModifier[1];
+        speed = "\nSpeed: " + states.rpg.statModifier[2];
+        damage = "\nDamage: " + states.rpg.statModifier[3];
+        defence = "\nDefence: " + states.rpg.statModifier[4];
+        statsText.text = healthRegen + staminaRegen + speed + damage + defence + zombies;
+    }
+
+    void UpdateLevelText()
+    {
+        string charClass =
+          GameMasterScript.Instance.characterClass == MenuScript.CharacterClass.ARCHER ? " Archer"
+        : GameMasterScript.Instance.characterClass == MenuScript.CharacterClass.WARRIOR ? " Warrior"
+        : GameMasterScript.Instance.characterClass == MenuScript.CharacterClass.MAGE ? " Mage"
+        : " ";
+        currentLevel.text = "Level " + states.rpg.level + charClass;
+    }
+
+    
+    protected override void GetFixedInput()
+    {
         cameraManager.Tick(fixedDelta);
     }
 
 
-    void GetInput()
+
+    protected override void GetInput()
     {
         SettleUIScreenBringUp();
 
         if (UIScreen.activeSelf) return;
 
+        crossHair.SetActive(states.aim || states.lockon);
+
         SettleDrinkPotion();
+
+        SettleCommands();
+
+        BrowsePotion();
 
         InputLookPosition();
 
@@ -100,6 +149,72 @@ public class InputManager : InputParent
         HandleLockonInput();
 
         SettleJump();
+
+        TakeItems();
+    }
+
+    void SettleCommands()
+    {
+        states.followMe = Input.GetButtonDown("Follow Me");
+    }
+
+    void TakeItems()
+    {
+        states.isPickUp = Input.GetKeyDown(KeyCode.F);
+    }
+
+    bool IsCurrentPotionQueueEmpty()
+    {
+        return states.rpg.potions[states.potionIndex].Count == 0;
+    }
+
+    void BrowsePotion()
+    {
+        if (states.rpg.IsPotionsEmpty())
+        {
+            if (states.havePotion)
+            {
+                states.havePotion = false;
+                potionText.text = " ";
+            }
+            return;
+        }
+        else
+        {
+            states.havePotion = true;
+        }
+
+        if (Input.GetButtonDown("Next Potion"))
+        {
+            while (true)
+            {
+                states.potionIndex = (states.potionIndex + 1) % PotionScript.potionTypes.Count;
+
+                if (!IsCurrentPotionQueueEmpty())
+                    break;
+            }
+        }
+
+        if (Input.GetButtonDown("Prev Potion"))
+        {
+            while (true)
+            {
+                states.potionIndex--;
+                if (states.potionIndex < 0)
+                    states.potionIndex = PotionScript.potionTypes.Count - 1;
+
+                if (!IsCurrentPotionQueueEmpty())
+                    break;
+            }
+        }
+
+        while (IsCurrentPotionQueueEmpty())
+        {
+            states.potionIndex = (states.potionIndex + 1) % PotionScript.potionTypes.Count;
+        }
+
+        Queue<PotionScript> current = states.rpg.potions[states.potionIndex];
+        potionText.text = current.Count + "x " + current.Peek().potionType.type + " Potion";
     }
 
     void SettleUIScreenBringUp()
@@ -107,6 +222,11 @@ public class InputManager : InputParent
         if (Input.GetKeyDown(KeyCode.I))
         {
             UIScreen.SetActive(!UIScreen.activeSelf);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            toolTip.SetActive(!toolTip.activeSelf);
         }
 
         if (UIScreen.activeSelf)
@@ -126,7 +246,6 @@ public class InputManager : InputParent
     void SettleDrinkPotion()
     {
         states.drink = Input.GetButtonDown("Drink");
-        potionCounter.text = "Potions x" + states.rpg.potions.Count.ToString();        
     }
 
 
@@ -155,14 +274,16 @@ public class InputManager : InputParent
 
     void SettleAim()
     {
-        states.aim = Input.GetButton("Aim");
+        states.aim = Input.GetButton("Aim") && states.rpg.EnoughStamina();
         if (states.aim)
         {
             mainCam.fieldOfView = Mathf.MoveTowards(mainCam.fieldOfView, 36, delta * 130);
+            cameraManager.currentFollowSpeed = 3 * cameraManager.followSpeed;
         }
         else
         {
             mainCam.fieldOfView = Mathf.MoveTowards(mainCam.fieldOfView, 80, delta * 130);
+            cameraManager.currentFollowSpeed = cameraManager.followSpeed;
         }
     }
     
@@ -233,7 +354,7 @@ public class InputManager : InputParent
 
         if (states.lockon)
         {
-            float mouseSpeedBump = 1.75f;
+            float mouseSpeedBump = 0.75f;
 
             if (!canSwitchTarget) return;
 
@@ -250,7 +371,7 @@ public class InputManager : InputParent
 
     IEnumerator SnapifyChangeTarget()
     {
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.15f);
 
         canSwitchTarget = true;
     }
@@ -273,10 +394,17 @@ public class InputManager : InputParent
 
         for (int i = 0; i < colliders.Length; i++)
         {
-            EnemyInput enemy = colliders[i].GetComponent<EnemyInput>();
+            NPCInput enemy = colliders[i].GetComponent<NPCInput>();
 
             if (enemy != null)
             {
+                if (Physics.Linecast(states.aem.head.position,
+                   enemy.states.aem.body.position,
+                   1 << 0))
+                {
+                    continue;
+                }
+
                 if (enemy == currentEnemyTarget) continue;
                 
                 Vector3 to = colliders[i].transform.position - mainCam.transform.position;
@@ -293,15 +421,17 @@ public class InputManager : InputParent
                 }
             }
         }
+        if (states.enemyTarget == null)
+            states.LockOff();
     }
 
 
-    private void States_EmptyEnemyTarget()
+    private void States_OnEmptyEnemyTarget()
     {
         cameraManager.enemyTarget = null;
     }
 
-    private void States_FillUpEnemyTarget(InputParent enemy)
+    private void States_OnFillUpEnemyTarget(InputParent enemy)
     {
         cameraManager.enemyTarget = enemy;
     }
@@ -317,13 +447,21 @@ public class InputManager : InputParent
 
         for (int i = 0; i < colliders.Length; i++)
         {
-            EnemyInput enemy = colliders[i].GetComponent<EnemyInput>();
+            NPCInput enemy = colliders[i].GetComponent<NPCInput>();
 
             if (enemy != null)
             {
+                if (Physics.Linecast(states.aem.head.position,
+                    enemy.states.aem.body.position,
+                    1 << 0))
+                {
+                    continue;
+                }
+
                 if (states.enemyTarget == null)
                 {
                     states.LockonOn(enemy);
+                    return;
                 }
                 else
                 {
@@ -338,12 +476,14 @@ public class InputManager : InputParent
                         states.LockonOn(enemy);
                     }
                 }
-            }       
-            
-            
+            }                  
         }
+
+        if (states.enemyTarget == null)
+            states.LockOff();
     }
 
+    
     
     void InputLookPosition()
     {
@@ -358,8 +498,16 @@ public class InputManager : InputParent
                     out hitInfo, 
                     distance, 
                     1 << 0 | 1 << 1 | 1 << 2 | 1 << 4 | 1 << 5 | 1 << 11))
-            {               
-                    states.lookPosition = hitInfo.point;
+            {    
+                states.lookPosition = hitInfo.point;
+
+                NPCInput npc = hitInfo.collider.GetComponent<NPCInput>();
+
+                if (npc == null) return;
+
+                if (npc.ui.activeSelf) return;
+
+                npc.StartCoroutine(npc.ShowUI());
             }
             else
             {
@@ -392,6 +540,7 @@ public class InputManager : InputParent
         else
         {
             states.aimFire = Input.GetButtonDown("Fire1");
+            states.point = Input.GetButtonDown("Go There");
         }
 
         if (canFire2 && triggerFire2)

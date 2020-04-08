@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3617972607939732245
 Transform:
   m_ObjectHideFlags: 0
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3617972607939732330}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -6.892293, y: 1.99, z: 3.09}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3822,9 +3822,9 @@ ParticleSystem:
       properties: 0
       emitProbability: 1
   LightsModule:
-    enabled: 0
+    enabled: 1
     ratio: 0
-    light: {fileID: 0}
+    light: {fileID: 466890257014142123, guid: e2df394fdd450ad43bd4cb07c76923df, type: 3}
     randomDistribution: 1
     color: 1
     range: 1
@@ -4826,7 +4826,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 484e5c63c69c8b54c8d550ba5543f584, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.15
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -4922,3 +4922,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c6830dc8ad9eab409a5c34d4a568a10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aC: {fileID: 8300000, guid: 484e5c63c69c8b54c8d550ba5543f584, type: 3}
+  volumeScale: 0.103

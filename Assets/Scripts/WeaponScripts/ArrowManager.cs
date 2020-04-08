@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArrowSript : WeaponManager
+public class ArrowManager : WeaponManager
 {
     bool isAlreadyAttacked = false;
 

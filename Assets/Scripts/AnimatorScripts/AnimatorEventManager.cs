@@ -14,9 +14,9 @@ public class AnimatorEventManager : MonoBehaviour
     // weapon slots
     /*[HideInInspector] public IEquippable rightWeapon;
     [HideInInspector] public IEquippable leftWeapon;*/
-    [HideInInspector] public MeleeWeaponScript weapon;
-    [HideInInspector] public ShieldScript shield;
-    [HideInInspector] public BowScript bow;
+    [HideInInspector] public EquippableMeleeWeapon weapon;
+    [HideInInspector] public EquippableShield shield;
+    [HideInInspector] public EquippableBow bow;
 
     // cached body parts
     [HideInInspector] public Transform head;
@@ -54,15 +54,19 @@ public class AnimatorEventManager : MonoBehaviour
 
         
 
-        weapon = GetComponentInChildren<MeleeWeaponScript>();
+        weapon = GetComponentInChildren<EquippableMeleeWeapon>();
         if (weapon != null)
         {
             weapon.Equip(this);
         }
 
-        shield = GetComponentInChildren<ShieldScript>();
+        shield = GetComponentInChildren<EquippableShield>();
+        if (shield != null)
+        {
+            shield.Equip(this);
+        }
         
-        bow = GetComponentInChildren<BowScript>();
+        bow = GetComponentInChildren<EquippableBow>();
         if (bow != null)
         {
             bow.Equip(this);
@@ -84,13 +88,7 @@ public class AnimatorEventManager : MonoBehaviour
         states.OnDrink += States_OnDrink;
     }
 
-    private void Update()
-    {
-        if (shield != null)
-        {
-            shield.gameObject.SetActive(animator.GetBool("aim"));
-        } 
-    }
+    
 
 
     #region General Actions
@@ -223,7 +221,7 @@ public class AnimatorEventManager : MonoBehaviour
             return;
 
         GameObject arrow = ObjectPool.Instance.GetObject("Arrow_Prefab(Clone)", bow.fakeArrow.transform.position, head.rotation);
-        AssignArrowVariables(arrow.GetComponent<ArrowSript>());
+        AssignArrowVariables(arrow.GetComponent<ArrowManager>());
     }
 
     public void LaunchMultipleArrowsVertically()
@@ -244,12 +242,12 @@ public class AnimatorEventManager : MonoBehaviour
             Quaternion rot = Quaternion.Euler(head.eulerAngles + offset);
 
             GameObject arrow = ObjectPool.Instance.GetObject("Arrow_Prefab(Clone)", bow.fakeArrow.transform.position, rot);
-            AssignArrowVariables(arrow.GetComponent<ArrowSript>());
+            AssignArrowVariables(arrow.GetComponent<ArrowManager>());
         }
 
     }
 
-    void AssignArrowVariables(ArrowSript aS)
+    void AssignArrowVariables(ArrowManager aS)
     {
         Physics.IgnoreCollision(states.capsule, aS.boxCollider);
         aS.damage = states.rpg.GetDamage();

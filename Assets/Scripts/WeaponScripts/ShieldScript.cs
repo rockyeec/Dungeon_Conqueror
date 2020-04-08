@@ -18,4 +18,6 @@ public class ShieldScript : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         parryWindow = false;
     }
+
+
 }

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeWeaponScript : MonoBehaviour, IEquippable
+public class EquippableMeleeWeapon : MonoBehaviour, IEquippable
 {
-    public WeaponManager weapon;
+    public MeleeWeaponManager weapon;
     AnimatorEventManager wielder;
     private void Awake()
     {
-        weapon = GetComponentInChildren<WeaponManager>();
         weapon.gameObject.SetActive(false);
     }
 

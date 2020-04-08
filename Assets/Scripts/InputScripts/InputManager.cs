@@ -282,7 +282,7 @@ public class InputManager : InputParent
         }
         else
         {
-            mainCam.fieldOfView = Mathf.MoveTowards(mainCam.fieldOfView, 80, delta * 130);
+            mainCam.fieldOfView = Mathf.MoveTowards(mainCam.fieldOfView, 69, delta * 130);
             cameraManager.currentFollowSpeed = cameraManager.followSpeed;
         }
     }

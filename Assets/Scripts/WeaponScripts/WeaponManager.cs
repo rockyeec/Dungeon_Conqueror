@@ -12,11 +12,6 @@ public class WeaponManager : MonoBehaviour
     [HideInInspector] public AnimatorEventManager wielder;
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        HurtPeople(other.gameObject);
-    }
-
 
     public void HurtPeople(GameObject collider)
     {
@@ -49,7 +44,7 @@ public class WeaponManager : MonoBehaviour
 
         bool hasHitShield = false;
 
-        ShieldScript shieldScript = ip.states.aem.shield;
+        EquippableShield shieldScript = ip.states.aem.shield;
         if (shieldScript != null)
         {
             if (shieldScript.gameObject.activeSelf)
@@ -61,7 +56,7 @@ public class WeaponManager : MonoBehaviour
                     //isHit = true;
                     hasHitShield = true;
                     particle = "Blue Sparks(Clone)";
-                    if (shieldScript.parryWindow)
+                    if (shieldScript.shieldScript.parryWindow)
                     {
                         if (wielder != null)
                             wielder.animator.CrossFade("Stagger", 0.15f);

@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d4d1990da90a14e92665af02b5592c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 3986710546487353796}
+  weapon: {fileID: 1795985108263168943}
 --- !u!1 &5818324907089374361
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6900264453969334744}
   - component: {fileID: 6900264453969334747}
-  - component: {fileID: 3986710546487353796}
+  - component: {fileID: 1795985108263168943}
   m_Layer: 8
   m_Name: WeaponCollider
   m_TagString: Untagged
@@ -122,7 +122,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.111330226, y: 0.035031844, z: 0.7017869}
   m_Center: {x: 0.0013930573, y: -0.0027808882, z: 0.42336196}
---- !u!114 &3986710546487353796
+--- !u!114 &1795985108263168943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6900264453969334745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9be955a8b7becf044b006861f8056093, type: 3}
+  m_Script: {fileID: 11500000, guid: baa5219593c1bb64ea9635a0a0d20981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0

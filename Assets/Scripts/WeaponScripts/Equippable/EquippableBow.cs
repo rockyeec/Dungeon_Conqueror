@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BowScript : MonoBehaviour, IEquippable
+public class EquippableBow : MonoBehaviour, IEquippable
 {
     [HideInInspector] public AnimatorEventManager wielder;
     public BowAnimatorScript bowArt;

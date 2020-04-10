@@ -6,9 +6,7 @@ using TMPro;
 
 public class NPCInput : InputParent
 {
-    [HideInInspector] public RPGManager rpg;
 
-    TextMeshProUGUI text;
 
     
     public float stopDistance = 1.55f;
@@ -40,33 +38,54 @@ public class NPCInput : InputParent
         }
     }
 
-
+    // pathfinding
     [HideInInspector] public Stack<Vector3> path = new Stack<Vector3>();
     [HideInInspector] public bool pathRequestOrderPlaced;
+
+
+    // weapon assignment
+    public List<string> weaponList = new List<string>();
+    public List<string> shieldList = new List<string>();
 
     protected override void Awake()
     {
         base.Awake();
 
-        rpg = states.rpg;
         states.OnRevive += States_OnRevive;
         states.OnDie += States_OnDie;
         states.OnFillUpEnemyTarget += States_OnFillUpEnemyTarget;
         states.OnEmptyEnemyTarget += States_OnEmptyEnemyTarget;
         //Debug.Log("ahoi, i'm subscribed baybeh!");
 
-        text = GetComponentInChildren<TextMeshProUGUI>();
-        ui = text.transform.parent.parent.gameObject;
+
     }
 
-
-
+    
 
     // Events
     private void States_OnDie()
-    {     
+    {
         StopCoroutine(CheckForObstacles());
         StopCoroutine(ChangeDirectionOccasionally());
+
+        RemoveWeapons();
+    }
+
+    private void States_OnRevive()
+    {
+        //Debug.Log("waddup, they revived me yo!");
+
+        // initialize UI
+        text.text = states.rpg.characterName + " | Level " + states.rpg.level;
+        ui.SetActive(false);
+
+        // initialize AI
+        StartCoroutine(LookOutForHostiles());
+        StartCoroutine(CheckForObstacles());
+        StartCoroutine(ChangeDirectionOccasionally());
+
+        // initialize weapon
+        AssignWeapons();
     }
 
     private void States_OnFillUpEnemyTarget(InputParent obj)
@@ -78,18 +97,6 @@ public class NPCInput : InputParent
     private void States_OnEmptyEnemyTarget()
     {
         BreakAggro();
-
-        
-    }
-
-    private void States_OnRevive()
-    {
-        //Debug.Log("waddup, they revived me yo!");
-        StartCoroutine(LookOutForHostiles());
-        text.text = states.rpg.characterName + " | Level " + states.rpg.level;
-        ui.SetActive(false);
-        StartCoroutine(CheckForObstacles());
-        StartCoroutine(ChangeDirectionOccasionally());
     }
 
 
@@ -304,6 +311,45 @@ public class NPCInput : InputParent
 
     // Private methods
 
+    void AssignWeapons()
+    {
+        if (weaponList.Count != 0)
+        {
+            int random = UnityEngine.Random.Range(0, weaponList.Count);
+            GameObject temp = ObjectPool.Instance.GetObject(weaponList[random], Vector3.zero, Quaternion.identity);
+            rpg.currentWeapon = temp.GetComponent<IAttackable>();
+            rpg.currentWeapon.Equip(states.aem);
+
+
+            backOffDistance = 1.45f;
+            if (temp.name == "Bow(Clone)")
+            {
+                stopDistance = 18;
+                return;
+            }
+            else
+            {
+                stopDistance = 2.72f;
+            }
+        }
+
+        if (shieldList.Count != 0)
+        {
+            int random = UnityEngine.Random.Range(0, shieldList.Count);
+            rpg.currentShield = ObjectPool.Instance.GetObject(shieldList[random], Vector3.zero, Quaternion.identity).GetComponent<EquippableShield>();
+            rpg.currentShield.Equip(states.aem);
+        }
+    }
+
+    void RemoveWeapons()
+    {
+        if (states.rpg.currentWeapon != null)
+            states.rpg.currentWeapon.Unequip();
+
+        if (states.rpg.currentShield != null)
+            states.rpg.currentShield.Unequip();
+    }
+
     void GetEnemyTarget()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, lockonDist, 1 << hostileLayer);
@@ -416,23 +462,16 @@ public class NPCInput : InputParent
     {
         states.horizontal = 0;
         states.vertical = 0;
-        ResetInputs();
         states.fire1 = false;
         states.moveAmount = 0;
         states.aim = false;
     }
 
-    void ResetInputs()
-    {
-        states.fire3 = false;
-        states.fire2 = false;
-        states.dodge = false;
-    }
 
     void HandleAttack(float curDistance)
     {
         // actions
-        if (curDistance < stopDistance + 1)
+        if (curDistance < stopDistance + 0.88f)
         {
             attackTimer += delta;
             
@@ -441,36 +480,27 @@ public class NPCInput : InputParent
 
             if (attackTimer > randomInterval)
             {
-
                 attackTimer = 0;
-                randomInterval = UnityEngine.Random.Range(0.7f, 3.4f);
-
-
                 randomAttack = UnityEngine.Random.Range(1, 6);
+                
+                if (randomAttack <= 3)
+                    randomInterval = UnityEngine.Random.Range(0.88f, 3.4f);
 
                 switch (randomAttack)
                 {
                     case 1:
-                        states.fire1 = false;
                         states.fire3 = true;
                         break;
                     case 2:
-                        states.fire1 = false;
                         states.fire2 = true;
                         break;
                     case 3:
-                        states.fire1 = false;
                         states.dodge = true;
                         break;
                     default:
-                        //states.fire1 = false;
-                        states.fire1 = true;
+                        StartCoroutine(Flurry());
                         break;
                 }
-            }
-            if (attackTimer > 0.01f)
-            {
-                ResetInputs();
             }
         }
 
@@ -480,7 +510,15 @@ public class NPCInput : InputParent
         }
     }
 
-
+    IEnumerator Flurry()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            yield return new WaitForSeconds(0.18f);
+            states.fire1 = true;
+        }
+        randomInterval = UnityEngine.Random.Range(0.88f, 3.4f);
+    }
 
     // for smooth movement state transitions
     void SmoothTowards(ref float axis, float target)

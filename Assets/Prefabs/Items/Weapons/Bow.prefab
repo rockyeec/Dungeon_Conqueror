@@ -108,11 +108,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c71645d1cc416f145acd4157e0d1ad7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
   rigidBody: {fileID: 0}
   wielder: {fileID: 0}
   bowArt: {fileID: 667333207282096552}
   fakeArrow: {fileID: 2019543056847965408}
   moveSet:
+    baseDamage: 5
+    speedMultiplier: 1
     fire1:
     - actionAnimationName: Archer Attack 1 Ready
       actionAnimationCurve:

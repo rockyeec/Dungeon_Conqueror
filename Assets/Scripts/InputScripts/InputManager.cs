@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System;
 
@@ -8,11 +9,12 @@ public class InputManager : InputParent
 {
     CameraManager cameraManager;
     Camera mainCam;
+    GameObject healthNStamina;
     GameObject crossHair;
-    GameObject UIScreen;
+    //GameObject UIScreen;
     GameObject toolTip;
 
-    public TextMeshProUGUI potionText;
+    public PotionCounterIdentifier potionHUD;
     public TextMeshProUGUI currentLevel;
     public TextMeshProUGUI statsText;
 
@@ -51,34 +53,54 @@ public class InputManager : InputParent
 
     private void Start()
     {
+        // subscribe events
         states.OnFillUpEnemyTarget += States_OnFillUpEnemyTarget;
         states.OnEmptyEnemyTarget += States_OnEmptyEnemyTarget;
         states.rpg.OnLevelUp += Rpg_OnLevelUp;
         states.rpg.OnDrinkPotion += Rpg_OnDrinkPotion;
 
+        // who fwen?
+        states.aem.friendlyLayer = 10;
 
-        GetComponentInChildren<AnimatorEventManager>().friendlyLayer = 10;
-
+        // set up camera
         mainCam = Camera.main;
         cameraManager = Camera.main.transform.parent.parent.GetComponent<CameraManager>();
         cameraManager.Init(transform);
 
-        crossHair = GetComponentInChildren<CrossHairScript>().gameObject;
-
-        UIManager ui = GetComponentInChildren<UIManager>();
+        // inventory
+        /*UIManager ui = GetComponentInChildren<UIManager>();
         ui.rpg = states.rpg;
         UIScreen = ui.transform.parent.gameObject;
-        UIScreen.SetActive(false);
+        UIScreen.SetActive(false);*/
+
+
+        //temp
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    protected override void AssignUI()
+    {
+        UpdateLevelText();
+        UpdateStatsText();
+        UpdatePotionHUD(-1);
+    }
+
+    protected override void InitUI()
+    {
+        // player HUD
+        healthNStamina = ObjectPool.Instance.GetObject("Player_Canvas(Clone)", transform);
+        // tool tip
         toolTip = GetComponentInChildren<ToolTipIdentifier>().gameObject;
         toolTip.SetActive(false);
-
-
-        potionText = GetComponentInChildren<PotionCounterIdentifier>().GetComponent<TextMeshProUGUI>();
-        potionText.text = " ";
+        // crosshair
+        crossHair = GetComponentInChildren<CrossHairScript>().gameObject;
+        // potion
+        potionHUD = GetComponentInChildren<PotionCounterIdentifier>();
+        // level
         currentLevel = GetComponentInChildren<LevelTextIdentifier>().GetComponent<TextMeshProUGUI>();
-        UpdateLevelText();
+        // status
         statsText = GetComponentInChildren<StatsIdentifier>().GetComponent<TextMeshProUGUI>();
-        UpdateStatsText();
     }
 
     private void Rpg_OnDrinkPotion()
@@ -126,9 +148,9 @@ public class InputManager : InputParent
     {
         SettleUIScreenBringUp();
 
-        if (UIScreen.activeSelf) return;
+       // if (UIScreen.activeSelf) return;
 
-        crossHair.SetActive(states.aim || states.lockon);
+        SettleCrossHair();
 
         SettleDrinkPotion();
 
@@ -151,11 +173,104 @@ public class InputManager : InputParent
         SettleJump();
 
         TakeItems();
+
+        SettleWeaponEquipment();
+
+        SettleSpecialAttacks();
+    }
+
+
+
+    private void SettleSpecialAttacks()
+    {
+        for (int i = 0; i < states.specialAttacks.Count; i++)
+        {
+            if(Input.GetButtonDown((i + 1).ToString()))
+            {
+                states.fireSpecial = i;
+                return;
+            }
+        }
+    }
+
+    private void SettleWeaponEquipment()
+    {
+        if (states.rpg.generalStuff.Count != 0)
+        {
+            IAttackable weapon = states.rpg.generalStuff[0].GetComponent<IAttackable>();
+            if (weapon != null)
+            {
+                states.rpg.generalStuff.RemoveAt(0);
+                states.rpg.weapons.Add(weapon);
+            }
+            else
+            {
+                EquippableShield shield = states.rpg.generalStuff[0].GetComponent<EquippableShield>();
+                if (shield != null)
+                {
+                    states.rpg.generalStuff.RemoveAt(0);
+                    states.rpg.shields.Add(shield);
+                }
+            }
+        }
+
+        if (rpg.weapons.Count != 0)
+        {
+
+            if (rpg.currentWeapon == null)
+            {
+                rpg.currentWeapon = rpg.weapons[0];
+                rpg.currentWeapon.Equip(states.aem);
+                rpg.weapons.RemoveAt(0);
+            }
+        }
+
+        if (rpg.shields.Count != 0)
+        {
+            if (rpg.currentShield == null)
+            {
+                rpg.currentShield = rpg.shields[0];
+                rpg.currentShield.Equip(states.aem);
+                rpg.shields.RemoveAt(0);
+            }
+        }
+
+        if (rpg.currentWeapon != null)
+        {
+            if (rpg.currentWeapon.Type == "Bow" && rpg.currentShield != null)
+            {
+                EquippableShield temp = rpg.currentShield;
+                rpg.currentShield.Unequip();
+                temp.PickUp(states);
+            }
+        }
+
+
+        // Drop Weapon
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (rpg.currentWeapon != null)
+                rpg.currentWeapon.Unequip();
+
+            if (rpg.currentShield != null)
+                rpg.currentShield.Unequip();
+        }
+    }
+
+    private void SettleCrossHair()
+    {
+        crossHair.SetActive(
+            states.animator.GetBool("aim") 
+            || states.lockon 
+            || Input.GetButton("Go There")
+            );
     }
 
     void SettleCommands()
     {
         states.followMe = Input.GetButtonDown("Follow Me");
+
+        states.point = Input.GetButtonUp("Go There");
     }
 
     void TakeItems()
@@ -175,7 +290,7 @@ public class InputManager : InputParent
             if (states.havePotion)
             {
                 states.havePotion = false;
-                potionText.text = " ";
+                UpdatePotionHUD(-1);
             }
             return;
         }
@@ -213,23 +328,35 @@ public class InputManager : InputParent
             states.potionIndex = (states.potionIndex + 1) % PotionScript.potionTypes.Count;
         }
 
-        Queue<PotionScript> current = states.rpg.potions[states.potionIndex];
-        potionText.text = current.Count + "x " + current.Peek().potionType.type + " Potion";
+        UpdatePotionHUD(states.potionIndex);
+    }
+
+    void UpdatePotionHUD(int index)
+    {
+        if (index == -1)
+        {
+            potionHUD.DisablePotionHUD();
+            return;
+        }
+
+        potionHUD.enabled = true;
+        Queue<PotionScript> current = states.rpg.potions[index];
+        potionHUD.UpdateValues(current.Peek().icon, current.Peek().potionType.type, current.Count);
     }
 
     void SettleUIScreenBringUp()
     {
-        if (Input.GetKeyDown(KeyCode.I))
+        /*if (Input.GetKeyDown(KeyCode.I))
         {
             UIScreen.SetActive(!UIScreen.activeSelf);
-        }
+        }*/
 
-        if (Input.GetKeyDown(KeyCode.T))
+        /*if (Input.GetKeyDown(KeyCode.T))
         {
             toolTip.SetActive(!toolTip.activeSelf);
         }
-
-        if (UIScreen.activeSelf)
+        */
+        /*if (UIScreen.activeSelf)
         {
             Time.timeScale = 0;
             Cursor.lockState = CursorLockMode.None;
@@ -240,7 +367,9 @@ public class InputManager : InputParent
             Time.timeScale = 1;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-        }
+        }*/
+
+        
     }
 
     void SettleDrinkPotion()
@@ -488,7 +617,7 @@ public class InputManager : InputParent
     void InputLookPosition()
     {
         float distance = 150;
-        if (states.aim || states.isInAction)
+        if (states.aim || states.isInAction || states.animator.GetBool("stillAiming"))
         //if (states.animator.GetBool("aim") || states.isInAction)
         {
             Ray ray = new Ray(mainCam.transform.position, mainCam.transform.forward);
@@ -541,7 +670,6 @@ public class InputManager : InputParent
         else
         {
             states.aimFire = Input.GetButtonDown("Fire1");
-            states.point = Input.GetButtonDown("Go There");
         }
 
         if (canFire2 && triggerFire2)

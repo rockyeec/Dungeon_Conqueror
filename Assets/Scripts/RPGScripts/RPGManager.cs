@@ -53,6 +53,8 @@ public class RPGManager : MonoBehaviour
         public void SetCurToZero()
         {
             cur = 0;
+            if (middle != null)
+                middle.SetFillToZero();
             UpdateBars();
         }
 
@@ -162,6 +164,8 @@ public class RPGManager : MonoBehaviour
             potionEffect = temp.gameObject;
             potionEffect.SetActive(false);
         }
+
+        //Debug.Log("rpg initialized");
     }
 
     public void TriggerGiveXP(float amount)
@@ -216,15 +220,17 @@ public class RPGManager : MonoBehaviour
     public float GetSpeed()
     {
         // Cap speed at 5.5
-        float temp = moveSpeed + statModifier[2]; // refer to PotionScript for content of index
-        if (temp > 5.5f)
-            temp = 5.5f;
+        float weaponBase = (currentWeapon != null) ? currentWeapon.MoveSet.speedMultiplier : 1;
+        float temp = (moveSpeed + statModifier[2]) * weaponBase; // refer to PotionScript for content of index
+        if (temp > 5.3f)
+            temp = 5.3f;
         return temp;
     }
 
     public float GetDamage()
     {
-        return UnityEngine.Random.Range(minDamage, maxDamage) + statModifier[3]; // refer to PotionScript for content of index
+        float weaponBase = (currentWeapon != null) ? currentWeapon.MoveSet.baseDamage : 0;
+        return UnityEngine.Random.Range(minDamage, maxDamage) + statModifier[3] + weaponBase; // refer to PotionScript for content of index
     }
 
     public float GetDefence()

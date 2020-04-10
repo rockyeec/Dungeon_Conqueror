@@ -10,7 +10,6 @@ public class AnimatorEventManager : MonoBehaviour
     // components
     [HideInInspector] public StatesManager states;
     [HideInInspector] public Animator animator;
-    [HideInInspector] public RPGManager rpg;
 
     // weapon slots
     /*[HideInInspector] public IEquippable rightWeapon;
@@ -26,13 +25,10 @@ public class AnimatorEventManager : MonoBehaviour
     [HideInInspector] public Transform leftHand;
     [HideInInspector] public Transform leftArm;
 
-    // audio
-    AudioSource audioSource;
-    public AudioClip audioClip;
 
     // commander atrributes
-    [HideInInspector] public Transform goThere;
-    [HideInInspector] public GameObject commandCursor;
+    [HideInInspector] public Transform commandCursor;
+    [HideInInspector] public GameObject commandCursorArt;
 
     // archer attributes
     [HideInInspector] public float arrowLaunchForce = 2333;
@@ -50,100 +46,47 @@ public class AnimatorEventManager : MonoBehaviour
     public event Action OnReleaseBow = delegate { };
 
 
-    public void Init()
+    public void Init(StatesManager states)
     {
-        audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         head = animator.GetBoneTransform(HumanBodyBones.Head);
         body = animator.GetBoneTransform(HumanBodyBones.Chest);
         rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
         leftHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
         leftArm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
-        states = GetComponentInParent<StatesManager>();
-        rpg = states.rpg;
+
+        this.states = states;
+        this.states.OnDrink += States_OnDrink;
 
 
-        MageCommandPointIdentifier temp = GetComponentInChildren<MageCommandPointIdentifier>();
-        if (temp != null)
+        if (states.name != "Controller Warrior(Clone)" || states.name != "Controller Archer(Clone)" || states.name != "Controller Mage(Clone)")
+            return;
+
+        commandCursor = ObjectPool.Instance.GetObject("Command Object(Clone)", body).transform;
+        MageCommandPointIdentifier mpi = commandCursor.GetComponentInChildren<MageCommandPointIdentifier>();
+        if (mpi != null)
         {
-            goThere = temp.transform.parent;
-            commandCursor = temp.gameObject;
-            commandCursor.SetActive(false);
+            commandCursorArt = mpi.gameObject;
+            commandCursorArt.SetActive(false);
         }
 
-        states.OnDrink += States_OnDrink;
-
-        
-        /*IAttackable weapon = GetComponentInChildren<IAttackable>();
-        if (weapon != null)
-        {
-            weapon.Equip(this);
-        }
-        states.rpg.weapons.Add(weapon);
-
-        EquippableShield shield = GetComponentInChildren<EquippableShield>();
-        if (shield != null)
-        {
-            shield.Equip(this);
-        }
-        states.rpg.shields.Add(shield);*/
+        //Debug.Log("animator event initialized");
     }
 
-    private void Update()
-    {
-        if (states.rpg.generalStuff.Count != 0)
-        {
-            IAttackable weapon = states.rpg.generalStuff[0].GetComponent<IAttackable>();
-            if (weapon != null)
-            {
-                states.rpg.generalStuff.RemoveAt(0);
-                states.rpg.weapons.Add(weapon);
-            }
-
-            EquippableShield shield = states.rpg.generalStuff[0].GetComponent<EquippableShield>();
-            if (shield != null)
-            {
-                states.rpg.generalStuff.RemoveAt(0);
-                states.rpg.shields.Add(shield);
-            }
-        }
-; 
-
-        
-        if (rpg.currentWeapon == null && rpg.weapons.Count != 0)
-        {
-            rpg.currentWeapon = rpg.weapons[0];
-            rpg.currentWeapon.Equip(this);
-            rpg.weapons.RemoveAt(0);
-        }
-
-        if (rpg.currentShield == null && rpg.shields.Count != 0)
-        {
-            rpg.currentShield = rpg.shields[0];
-            rpg.currentShield.Equip(this);
-            rpg.shields.RemoveAt(0);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.X) && rpg.currentWeapon != null)
-        {
-            if (rpg.currentWeapon != null)
-                rpg.currentWeapon.Unequip();
-
-            if (rpg.currentShield != null)
-                rpg.currentShield.Unequip();
-        }
-    }
+    
 
 
     #region General Actions
     public virtual void Attack()
     {
-        rpg.currentWeapon.Attack();
+        if (states.rpg.currentWeapon != null)
+            states.rpg.currentWeapon.Attack();
     }
 
     public virtual void EndAttack()
     {
-        rpg.currentWeapon.EndAttack();
+        if (states.rpg.currentWeapon != null)
+            states.rpg.currentWeapon.EndAttack();
     }
 
     public void EndAction()
@@ -175,6 +118,7 @@ public class AnimatorEventManager : MonoBehaviour
             Pickuppable stuff = items[i].GetComponent<Pickuppable>();
             if (stuff != null)
             {
+        //Debug.Log("Happened!");
                 stuff.PickUp(states);
             }
         }
@@ -187,9 +131,12 @@ public class AnimatorEventManager : MonoBehaviour
     #region Commander Actions
     public void FollowMe()
     {
-        goThere.parent = body;
-        goThere.localPosition = Vector3.zero;
-        commandCursor.SetActive(false);
+        if (commandCursor == null)
+            return;
+
+        commandCursor.SetParent(body);
+        commandCursor.localPosition = Vector3.zero;
+        commandCursorArt.SetActive(false);
         OnCommand();
     }
 
@@ -197,7 +144,7 @@ public class AnimatorEventManager : MonoBehaviour
     public void GoThere()
     {       
         Vector3 temp = states.lookPosition;
-        temp.y = body.position.y;
+        temp.y += 1;//= body.position.y;
        
 
         if (!MyGrid.Instance.GetNode(temp).isWalkable)
@@ -206,11 +153,11 @@ public class AnimatorEventManager : MonoBehaviour
             temp += dir * 2f;
         }
 
-        goThere.parent = null;
-        goThere.position = temp;
+        commandCursor.SetParent(null);
+        commandCursor.position = temp;
+        commandCursor.rotation = Quaternion.identity;
 
-        commandCursor.SetActive(true);
-        commandCursor.transform.rotation = Quaternion.identity;
+        commandCursorArt.SetActive(true);
 
         OnCommand();
     }
@@ -236,16 +183,16 @@ public class AnimatorEventManager : MonoBehaviour
 
     public void LaunchArrow()
     {
-        rpg.currentWeapon.LaunchArrow();
+        states.rpg.currentWeapon.LaunchArrow();
     }
 
     public void LaunchMultipleArrowsVertically()
     {
-        rpg.currentWeapon.LaunchMultipleArrowsVertically();
+        states.rpg.currentWeapon.LaunchMultipleArrowsVertically();
     }
     public void LaunchMultipleArrowsHorizontally()
     {
-        rpg.currentWeapon.LaunchMultipleArrowsHorizontally();
+        states.rpg.currentWeapon.LaunchMultipleArrowsHorizontally();
     }
 
 
@@ -307,16 +254,9 @@ public class AnimatorEventManager : MonoBehaviour
         ip.UpdateStatsText();
     }
 
-    public void RemoveMinionFromList(int index)
+    public void RemoveMinionFromList(PlayerMinionScript who)
     {
-        zombies.RemoveAt(index);
-
-        if (index == zombies.Count) return;
-
-        for (int i = index; i < zombies.Count; i++)
-        {
-            zombies[i].index = i;
-        }
+        zombies.Remove(who);
     }
 
     void ProduceEffects(Vector3 position)
@@ -334,7 +274,7 @@ public class AnimatorEventManager : MonoBehaviour
     #region misc
     public void FootStep()
     {
-        audioSource.PlayOneShot(audioClip, 0.4f);
+        states.audioSource.PlayOneShot(states.footStep, 0.4f);
     }
 
 

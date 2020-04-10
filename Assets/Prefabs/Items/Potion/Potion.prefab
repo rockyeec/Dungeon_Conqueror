@@ -170,13 +170,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aec4edec3416394b89a4ece72859d02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   rigidBody: {fileID: 0}
+  icons:
+  - {fileID: 21300000, guid: 2cba813dc7347674ba8db23cd602138f, type: 3}
+  - {fileID: 21300000, guid: 25acbbd33c431224db7d817a4009f7e0, type: 3}
+  - {fileID: 21300000, guid: c8724c4dcf2ad214592d9389e38b278a, type: 3}
+  - {fileID: 21300000, guid: 75a824d657e3a0644b9c855a3b61de79, type: 3}
+  - {fileID: 21300000, guid: 4a5bde2a2e5788144859da12565b823a, type: 3}
   potionType:
     index: 0
     type: 
     color: {r: 0, g: 0, b: 0, a: 0}
     duration: 0
     value: 0
+    icon: {fileID: 0}
   liquidContent: {fileID: 7855241970474922366}
 --- !u!65 &614586973247637634
 BoxCollider:

@@ -8,7 +8,10 @@ public class MiddleBarScript : MonoBehaviour
     Image image;
     public float changeDuration = 0.33f;
 
-
+    public void SetFillToZero()
+    {
+        image.fillAmount = 0;
+    }
 
     public void Init(float percentage)
     {

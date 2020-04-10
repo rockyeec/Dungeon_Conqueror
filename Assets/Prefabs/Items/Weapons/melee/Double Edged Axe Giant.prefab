@@ -139,9 +139,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d4d1990da90a14e92665af02b5592c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
   rigidBody: {fileID: 0}
   weapon: {fileID: 578308846453027301}
   moveSet:
+    baseDamage: 12
+    speedMultiplier: 0.88
     fire1:
     - actionAnimationName: Warrior Heavy Attack 1
       actionAnimationCurve:
@@ -262,7 +265,7 @@ MonoBehaviour:
       damageMultiplier: 1.8
       volumeScale: 0.4
     fire4:
-      actionAnimationName: Warrior Heavy Attack 1
+      actionAnimationName: Warrior Overhead Attack
       actionAnimationCurve:
         serializedVersion: 2
         m_Curve: []

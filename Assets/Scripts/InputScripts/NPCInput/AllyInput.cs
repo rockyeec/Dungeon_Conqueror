@@ -13,7 +13,7 @@ public class AllyInput : NPCInput
 
             if (commander != null)
             {
-                return commander.states.aem.goThere;
+                return commander.states.aem.commandCursor;
             }
 
             return null;
@@ -101,7 +101,7 @@ public class AllyInput : NPCInput
     {
         get
         {
-            return (commander.states.aem.goThere.position - transform.position).normalized;
+            return (commander.states.aem.commandCursor.position - transform.position).normalized;
         }
     }
 
@@ -116,7 +116,7 @@ public class AllyInput : NPCInput
     public void SubscribeToCommander(InputParent ip)
     {
         commander = ip;
-        goThere = commander.states.aem.goThere;
+        goThere = commander.states.aem.commandCursor;
         commander.states.aem.OnCommand += Aem_OnCommand;
     }
 
@@ -200,7 +200,7 @@ public class AllyInput : NPCInput
         // Come back to master!
         states.walk = false;
         ChangeDirection(CommandPointDirection);
-        HandleMovement(commander.states.aem.goThere.position, allyFollowDistance, stopDistance, out emptyDistance);
+        HandleMovement(commander.states.aem.commandCursor.position, allyFollowDistance, stopDistance, out emptyDistance);
     }
 
     

@@ -32,9 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 4684933425072816665}
-  - {fileID: 8652630981680457915}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,6 +48,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ac010078323054a83733d9489fa68b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bodies:
+  - {fileID: 0}
+  - {fileID: 0}
+  ragdollParts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  audioSource: {fileID: 0}
+  footStep: {fileID: 8300000, guid: d882d7356e396d34eaaea4709c12513c, type: 3}
+  model: Sorceress
   slerpSpeed: 8.5
   actionCurveMultiplier: 8.5
   jumpStaminaConsumption: 3
@@ -83,6 +99,7 @@ MonoBehaviour:
     staminaConsumption: 4
     damageMultiplier: 0
     volumeScale: 0.4
+  specialAttacks: []
   drinkPotion:
     actionAnimationName: 
     actionAnimationCurve:
@@ -148,6 +165,7 @@ MonoBehaviour:
   walk: 0
   point: 0
   followMe: 0
+  fireSpecial: -1
   moveAmount: 0
   moveDirection: {x: 0, y: 0, z: 0}
   onGround: 0
@@ -303,7 +321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c400984aafe49bc4a83ab53e413e93fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: Flesh Golem
+  characterName: Shadow Clone
   level: 1
   health:
     max: 0
@@ -349,164 +367,18 @@ MonoBehaviour:
   ui: {fileID: 0}
   lockonDist: 25
   states: {fileID: 0}
+  rpg: {fileID: 0}
   stopDistance: 2.8
   backOffDistance: 1.45
   hostileLayer: 10
   lastTargetPosition: {x: 0, y: 0, z: 0}
   pathRequestOrderPlaced: 0
-  index: 0
---- !u!1001 &993926265153789358
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 5773779560252307964}
-    m_Modifications:
-    - target: {fileID: 4865059110613190406, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_Name
-      value: Zombie Ranger Dead
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e0ae49babb9c4eb4d8a52a45c643d797, type: 3}
---- !u!4 &8652630981680457915 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8493631275359696149, guid: e0ae49babb9c4eb4d8a52a45c643d797,
-    type: 3}
-  m_PrefabInstance: {fileID: 993926265153789358}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &3808719841090057996
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 5773779560252307964}
-    m_Modifications:
-    - target: {fileID: 4865059110613190406, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_Name
-      value: Zombie Ranger
-      objectReference: {fileID: 0}
-    - target: {fileID: 6007188230616855440, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_Volume
-      value: 0.232
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 016232e357e5e294c959e7b7bf28d436, type: 3}
---- !u!4 &4684933425072816665 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8493631275359696149, guid: 016232e357e5e294c959e7b7bf28d436,
-    type: 3}
-  m_PrefabInstance: {fileID: 3808719841090057996}
-  m_PrefabAsset: {fileID: 0}
+  weaponList:
+  - Bow(Clone)
+  - Broad Sword(Clone)
+  - Short Sword(Clone)
+  - Double Edged Axe(Clone)
+  - Single Edged Axe(Clone)
+  shieldList:
+  - Round Shield(Clone)
+  - Kite Shield(Clone)

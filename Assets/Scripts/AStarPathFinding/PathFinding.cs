@@ -25,7 +25,7 @@ public class PathFinding : MonoBehaviour
 
     void PerformNextRequest()
     {
-        Debug.Log("Queue Count: " + requestQueue.Count);
+        //Debug.Log("Queue Count: " + requestQueue.Count);
         if (isProcessing) return;
 
         if (requestQueue.Count == 0) return;
@@ -46,8 +46,8 @@ public class PathFinding : MonoBehaviour
         );
          
 
-        Debug.Log(Time.deltaTime);
-        Debug.Log("Queue Count: " + requestQueue.Count);
+        //Debug.Log(Time.deltaTime);
+        //Debug.Log("Queue Count: " + requestQueue.Count);
     }
 
     void FinishedRequest()

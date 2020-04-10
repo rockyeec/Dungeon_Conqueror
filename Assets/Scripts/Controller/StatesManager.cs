@@ -9,8 +9,16 @@ public class StatesManager : MonoBehaviour
     float delta;
     float fixedDelta;
 
+
+    // 3D Models
+    [HideInInspector] public GameObject[] bodies = new GameObject[2];
+    [HideInInspector] public CapsuleCollider[] ragdollLimbs = new CapsuleCollider[8];
+    [HideInInspector] public BoxCollider[] ragdollBody = new BoxCollider[2];
+    [HideInInspector] public SphereCollider ragdollHead;
+
     // Audio Source
-    AudioSource audioSource;
+    [HideInInspector] public AudioSource audioSource;
+    public AudioClip footStep;
 
 
     [System.Serializable]
@@ -28,6 +36,8 @@ public class StatesManager : MonoBehaviour
     [System.Serializable]
     public class MoveSet
     {
+        public float baseDamage;
+        public float speedMultiplier;
         public List<ActionWithCurve> fire1 = new List<ActionWithCurve>();
         public ActionWithCurve fire2;
         public ActionWithCurve fire3;
@@ -35,10 +45,17 @@ public class StatesManager : MonoBehaviour
         public string aimBool;
     }
 
+    /*[System.Serializable]
+    public class SpecialAttack
+    {
+        [HideInInspector] public bool button;
+        public ActionWithCurve attack;
+    }*/
 
 
 
     [Header("Stats")]
+    public string model;
     public float slerpSpeed = 8.5f;
     public float actionCurveMultiplier = 4.5f;
     public float jumpStaminaConsumption = 20;
@@ -46,10 +63,7 @@ public class StatesManager : MonoBehaviour
 
     [Header("Action Customization")]
     public ActionWithCurve dodgeAction = new ActionWithCurve();
-    //public List<ActionWithCurve> attackComboListForFire1 = new List<ActionWithCurve>();
-    //public ActionWithCurve attackActionForFire2 = new ActionWithCurve();
-    //public ActionWithCurve attackActionForFire3 = new ActionWithCurve();
-    //public ActionWithCurve aimAttackString;
+    public List<ActionWithCurve> specialAttacks = new List<ActionWithCurve>();
     public ActionWithCurve drinkPotion;
     public ActionWithCurve pickUp;
     public ActionWithCurve pointAction;
@@ -62,7 +76,6 @@ public class StatesManager : MonoBehaviour
     [HideInInspector] public GameObject deadBody;
     [HideInInspector] public InputParent enemyTarget;
     [HideInInspector] public Transform lookTransform;
-    //[HideInInspector] public StatesManager engagedBy;
 
 
 
@@ -94,6 +107,7 @@ public class StatesManager : MonoBehaviour
     [HideInInspector] public bool walk;
     [HideInInspector] public bool point;
     [HideInInspector] public bool followMe;
+    [HideInInspector] public int fireSpecial = -1;
 
     // States
     [HideInInspector] public float moveAmount;
@@ -129,7 +143,7 @@ public class StatesManager : MonoBehaviour
     float jumpTimer = 0;
 
     // Jump Attack
-    bool isFire2 = false;
+    bool isJumpAttackBool = false;
 
     // Lockon
     [HideInInspector] public bool triggerNextLockon = false;
@@ -206,7 +220,7 @@ public class StatesManager : MonoBehaviour
         rpg.UpdateStatsAccordingToLevel(level);
         rpg.health.Reset();
         rpg.stamina.Reset();
-        deadBody.GetComponent<DieScript>().enabled = false;
+        //dieScript.enabled = false;
         deadBody.SetActive(false);
         animator.gameObject.SetActive(true);
         rigidBody.useGravity = true;
@@ -220,30 +234,63 @@ public class StatesManager : MonoBehaviour
     // Main Functions
     public void Init()
     {
-        rpg = GetComponent<RPGManager>();
+        // components
+        capsule = GetComponent<CapsuleCollider>();
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        rpg = GetComponent<RPGManager>();
+        rpg.Init();
 
-        dieScript = GetComponentInChildren<DieScript>();
+
+        // initialize bodies
+        /*for (int i = 0; i < 2; i++)
+        {
+            bodies[i] = ObjectPool.Instance.GetObject(model + "(Clone)", transform);
+        }*/
+
+
+        // life body
+        bodies[1] = ObjectPool.Instance.GetObject(model + "_L(Clone)", transform);
+        //DisableRagdoll(bodies[1]);
+        aem = bodies[1].AddComponent<AnimatorEventManager>();
+        aem.Init(this);
+        animator = aem.animator;
+        ikManager = bodies[1].AddComponent<IKManager>();
+        ikManager.Init(this);
+
+
+        // dead body
+        bodies[0] = ObjectPool.Instance.GetObject(model + "(Clone)", transform);
+        dieScript = bodies[0].AddComponent<DieScript>();
         dieScript.Init();
         dieScript.states = this;
         deadBody = dieScript.gameObject;
         deadBody.SetActive(false);
-        rpg.Init();
 
-        capsule = GetComponent<CapsuleCollider>();
 
-        aem = GetComponentInChildren<AnimatorEventManager>();
-        aem.Init();
-        animator = aem.animator;
-        ikManager = aem.GetComponent<IKManager>();
-        ikManager.Init(this);
 
+        // item interaction and stuff
         PotionHandIdentifier potionHand = GetComponentInChildren<PotionHandIdentifier>();
         if (potionHand != null)
             this.potionHand = potionHand.transform;
 
         pickUp.actionAnimationName = "Pick Up";
+    }
+
+    private void DisableRagdoll(GameObject body)
+    {
+        ragdollLimbs = body.GetComponentsInChildren<CapsuleCollider>();
+        for (int i = 0; i < ragdollLimbs.Length; i++)
+        {
+            ragdollLimbs[i].enabled = false;
+        }
+        ragdollBody = body.GetComponentsInChildren<BoxCollider>();
+        for (int i = 0; i < ragdollBody.Length; i++)
+        {
+            ragdollBody[i].enabled = false;
+        }
+        ragdollHead = body.GetComponentInChildren<SphereCollider>();
+        ragdollHead.enabled = false;
     }
 
 
@@ -620,7 +667,15 @@ public class StatesManager : MonoBehaviour
             }
             else
             {
-               animator.SetBool(rpg.currentWeapon.MoveSet.aimBool, true);
+                if (rpg.currentWeapon != null)
+                {
+                    animator.SetBool(rpg.currentWeapon.MoveSet.aimBool, true);
+                }
+                else
+                {
+                    animator.SetBool("look", true);
+                }
+
             }
         }
         else
@@ -663,11 +718,18 @@ public class StatesManager : MonoBehaviour
             else
             {
                 direction = transform.forward;
+                if (enemyTarget != null)
+                {
+                    if ((enemyTarget.transform.position - transform.position).magnitude < 0.88f)
+                    {
+                        direction = Vector3.zero;
+                    }
+                }
             }
 
             direction *= zValue;
 
-            if (!(isFire2 && !onGround))
+            if (!(isJumpAttackBool && !onGround))
                 rigidBody.velocity = direction * actionCurveMultiplier;
         }
         else
@@ -711,9 +773,9 @@ public class StatesManager : MonoBehaviour
                 {
                     isDodge = false;
                 }
-                if (isFire2)
+                if (isJumpAttackBool)
                 {
-                    isFire2 = false;
+                    isJumpAttackBool = false;
                 }
             }
         }
@@ -754,8 +816,13 @@ public class StatesManager : MonoBehaviour
         {
             if (fire1)
             {
-                isFire2 = true; // gravity applies when jump attack
-                PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire1[attComboIndex], ref actionAnimation, ref isInAction);
+                fire1 = false;
+                isJumpAttackBool = true; // gravity applies when jump attack
+                if (attComboIndex < rpg.currentWeapon.MoveSet.fire1.Count && attComboIndex >= 0)
+                {
+                    PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire1[attComboIndex], ref actionAnimation, ref isInAction);
+                }
+
                 if (attComboIndex < rpg.currentWeapon.MoveSet.fire1.Count - 1)
                 {
                     attComboIndex++;
@@ -763,32 +830,55 @@ public class StatesManager : MonoBehaviour
                 else
                 {
                     attComboIndex = 0;
-                }
+                }                
             }
 
             if (fire2)
             {
                 fire2 = false;
-                isFire2 = true; // gravity applies when jump attack
+                isJumpAttackBool = true; // gravity applies when jump attack
                 PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire2, ref actionAnimation, ref isInAction);
             }
 
             if (fire3)
             {
-                isFire2 = true; // gravity applies when jump attack
                 fire3 = false;
+                isJumpAttackBool = true; // gravity applies when jump attack
                 PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire3, ref actionAnimation, ref isInAction);
             }
 
 
             if (aimFire && animator.GetBool("canAimAttack"))
             {
+                aimFire = false;
+                isJumpAttackBool = true;
                 PerformActionWithCurve(rpg.currentWeapon.MoveSet.fire4, ref actionAnimation, ref isSlowMove);
+
+                //actionAnimation = "Mage Summoning";
+            }
+        }
+        else
+        {
+            fire1 = false;
+            fire2 = false;
+            fire3 = false;
+            aimFire = false;
+        }
+
+
+        if (fireSpecial > -1)
+        {
+            if (fireSpecial < specialAttacks.Count)
+            {
+                PerformActionWithCurve(specialAttacks[fireSpecial], ref actionAnimation, ref isInAction);
+                fireSpecial = -1;
             }
         }
 
-        if (point && animator.GetBool("canAimAttack"))
+
+        if (point)
         {
+            point = false;
             PerformActionWithCurve(pointAction, ref actionAnimation, ref isSlowMove);
         }
 
@@ -800,6 +890,7 @@ public class StatesManager : MonoBehaviour
 
         if (dodge && !isDodge)
         {
+            dodge = false;
             dodgeDir = moveDirection;
             isDodge = true;
             PerformActionWithCurve(dodgeAction, ref actionAnimation, ref isInAction);
@@ -811,6 +902,7 @@ public class StatesManager : MonoBehaviour
             && potionHand != null
             && !isSlowMove)
         {
+            drink = false;
             PerformActionWithCurve(drinkPotion, ref actionAnimation, ref isSlowMove);
             currentPotion = rpg.potions[potionIndex].Dequeue();
             OnDrink(currentPotion);
@@ -819,6 +911,7 @@ public class StatesManager : MonoBehaviour
 
         if (followMe)
         {
+            followMe = false;
             aem.FollowMe();
             if (GameMasterScript.Instance.audioSource != null)
                 GameMasterScript.Instance.audioSource.PlayOneShot(shoutFollowMe, 0.7f);

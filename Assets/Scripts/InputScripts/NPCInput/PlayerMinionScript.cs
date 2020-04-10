@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerMinionScript : AllyInput
 {
-    [HideInInspector]
-    public int index;
+    //[HideInInspector]
+    //public int index;
 
     protected override void Awake()
     {
@@ -16,7 +16,7 @@ public class PlayerMinionScript : AllyInput
 
     private void States_OnDie()
     {
-        commander.states.aem.RemoveMinionFromList(index);
+        commander.states.aem.RemoveMinionFromList(this);//index);
         commander.UpdateStatsText();
     }
 }

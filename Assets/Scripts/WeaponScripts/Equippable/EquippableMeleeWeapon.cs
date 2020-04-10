@@ -12,6 +12,14 @@ public class EquippableMeleeWeapon : Pickuppable, IAttackable
     {
         get { return moveSet; }
     }
+    public string Name
+    {
+        get { return name; }
+    }
+    public string Type
+    {
+        get { return "Melee"; }
+    }
 
     protected override void Awake()
     {
@@ -39,8 +47,10 @@ public class EquippableMeleeWeapon : Pickuppable, IAttackable
         transform.localRotation = Quaternion.identity;
     }
 
-    public void Unequip()
+    public IEquippable Unequip()
     {
+        EndAttack();
+
         // physics
         gameObject.SetActive(true);
         SetRigidbodyActivity(true);
@@ -55,6 +65,7 @@ public class EquippableMeleeWeapon : Pickuppable, IAttackable
         // de-boss.. Merdeka! You answer to NO ONE now!!
         wielder.states.rpg.currentWeapon = null;
         wielder = null;
+        return this;
     }
 
     public void Attack()
@@ -62,7 +73,7 @@ public class EquippableMeleeWeapon : Pickuppable, IAttackable
         weapon.gameObject.SetActive(true);
         weapon.isHit = false;
         weapon.friendlyLayer = wielder.friendlyLayer;
-        weapon.ownerForward = transform.forward;
+        weapon.ownerForward = wielder.transform.forward;
         weapon.damage = wielder.states.rpg.GetDamage() * wielder.states.damageMultiplier;
     }
 

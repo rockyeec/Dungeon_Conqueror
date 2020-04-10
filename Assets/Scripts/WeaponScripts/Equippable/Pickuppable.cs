@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Pickuppable : MonoBehaviour
 {
+    public Sprite icon;
+
+
     protected BoxCollider boxCollider;
     [HideInInspector] public Rigidbody rigidBody;
     StatesManager owner;
@@ -17,7 +20,7 @@ public class Pickuppable : MonoBehaviour
 
     public virtual void PickUp(StatesManager states)
     {
-        Debug.Log("pickUpLaDey");
+        //Debug.Log("pickUpLaDey");
         owner = states;
         SetRigidbodyActivity(false);
         states.rpg.generalStuff.Add(this);
@@ -38,6 +41,7 @@ public class Pickuppable : MonoBehaviour
 
     protected void SetRigidbodyActivity(bool to)
     {
+        //rigidBody.isKinematic = !to;
         boxCollider.enabled = to;
         rigidBody.useGravity = to;
 

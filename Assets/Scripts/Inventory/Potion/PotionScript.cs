@@ -12,6 +12,7 @@ public class PotionScript : Pickuppable
         public Color color;
         public float duration;
         public float value;
+        public Sprite icon;
 
         public PotionType(int index, string type, Color color, float duration, float value)
         {
@@ -21,9 +22,14 @@ public class PotionScript : Pickuppable
             this.duration = duration;
             this.value = value;
         }
+
+        public void AssignIcons(Sprite icon)
+        {
+            this.icon = icon;
+        }
     }
 
-    
+    public List<Sprite> icons = new List<Sprite>();
     static public List<PotionType> potionTypes = new List<PotionType>();
 
     void AssignPotionTypes()
@@ -33,6 +39,15 @@ public class PotionScript : Pickuppable
         potionTypes.Add(new PotionType(2, "Speed", Color.yellow, 60f, 1.45f));
         potionTypes.Add(new PotionType(3, "Damage", Color.magenta, 60f, 10));
         potionTypes.Add(new PotionType(4, "Defence", Color.green, 60f, 5));
+        // [!REMINDER] as you add more potion types:
+        // apply effects under rpgManager!
+        // ALSO remember to update player canvas potion ui...by duplicating more Potion_Counter prefabs under potionHUD
+        
+
+        for (int i = 0; i < potionTypes.Count; i++)
+        {
+            potionTypes[i].AssignIcons(icons[i]);
+        }
     }
 
 
@@ -64,6 +79,7 @@ public class PotionScript : Pickuppable
     public void ReInit()
     {
         potionType = potionTypes[UnityEngine.Random.Range(0, potionTypes.Count)];
+        icon = potionType.icon;
         meshRenderer.material.color = potionType.color;
         boxCollider.enabled = true;
         isTaken = false;

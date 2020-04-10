@@ -13,7 +13,16 @@ public class EquippableBow : Pickuppable, IAttackable
     {
         get { return moveSet; }
     }
-    
+
+    public string Name
+    {
+        get { return name; }
+    }
+    public string Type
+    {
+        get { return "Bow"; }
+    }
+
 
     void PutAt(Transform who, Transform where)
     {
@@ -47,7 +56,7 @@ public class EquippableBow : Pickuppable, IAttackable
         bowArt.Equip(this.wielder);
     }
 
-    public void Unequip()
+    public IEquippable Unequip()
     {
         // physics
         gameObject.SetActive(true);
@@ -70,6 +79,7 @@ public class EquippableBow : Pickuppable, IAttackable
         // de-boss yourself
         wielder.states.rpg.currentWeapon = null;
         wielder = null;
+        return this;
     }
 
     public void Attack()
@@ -119,13 +129,13 @@ public class EquippableBow : Pickuppable, IAttackable
         aS.damage = wielder.states.rpg.GetDamage();
         aS.friendlyLayer = wielder.friendlyLayer;
         aS.rigidb.AddForce(aS.transform.forward * wielder.arrowLaunchForce);
-        aS.ownerForward = transform.forward;
+        aS.ownerForward = wielder.transform.forward;
     }
 
 
     void LimitLeftHand(bool what)
     {
-        Debug.Log("Waited all the frames bruh");
+        //Debug.Log("Waited all the frames bruh");
         wielder.animator.SetBool("limitLeftHand", what);
     }
 }

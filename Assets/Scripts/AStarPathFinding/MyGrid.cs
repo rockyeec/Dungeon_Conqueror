@@ -85,8 +85,22 @@ public class MyGrid : MonoBehaviour
         ClampCoordinate(position);
         int gridX = Mathf.RoundToInt(position.x - startX);
         int gridZ = Mathf.RoundToInt(position.z - startZ);
-        Mathf.Clamp(gridX, 0, gridMaxX - 1);
-        Mathf.Clamp(gridZ, 0, gridMaxZ - 1);
+        if (gridZ >= gridMaxZ)
+        {
+            gridZ = gridMaxZ - 1;
+        }
+        if (gridZ < 0)
+        {
+            gridZ = 0;
+        }
+        if (gridX >= gridMaxX)
+        {
+            gridX = gridMaxX - 1;
+        }
+        if (gridX < 0)
+        {
+            gridX = 0;
+        }
         return grid[gridX, gridZ];
     }
 

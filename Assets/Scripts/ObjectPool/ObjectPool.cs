@@ -37,12 +37,20 @@ public class ObjectPool : MonoBehaviour
     }
 
     [SerializeField]
+    List<PoolInit> priorityPool = new List<PoolInit>();
+    [SerializeField]
     List<PoolInit> poolList = new List<PoolInit>();
 
     Dictionary<string, Pool> poolDic = new Dictionary<string, Pool>();
 
     private void Start()
     {
+        foreach (PoolInit item in priorityPool)
+        {
+            Pool temp = new Pool(item.prefab, item.initialAmount);
+            poolDic.Add(item.prefab.name + "(Clone)", temp);
+        }
+
         foreach (PoolInit item in poolList)
         {
             Pool temp = new Pool(item.prefab, item.initialAmount);
@@ -65,6 +73,7 @@ public class ObjectPool : MonoBehaviour
 
     private void TopUpPool(string key)
     {
+        Debug.Log(key + " not enough");
         for (int i = 0; i < poolDic[key].amountPerBatch / 3; i++)
         {
             GameObject temp = Instantiate(poolDic[key].prefab, transform);
@@ -84,6 +93,22 @@ public class ObjectPool : MonoBehaviour
         temp.SetActive(true);
         temp.transform.position = position;
         temp.transform.rotation = rotation;
+
+        return temp;
+    }
+
+    public GameObject GetObject(string key, Transform parent)
+    {
+        if (poolDic[key].prefabs.Count <= 0)
+        {
+            TopUpPool(key);
+        }
+
+        GameObject temp = poolDic[key].prefabs.Dequeue();
+        temp.SetActive(true);
+        temp.transform.SetParent(parent);
+        temp.transform.localPosition = Vector3.zero;
+        temp.transform.localRotation = Quaternion.identity;
 
         return temp;
     }

@@ -6,6 +6,14 @@ public class EquippableShield : Pickuppable, IEquippable
 {
     public ShieldScript shieldScript;
     [HideInInspector] public AnimatorEventManager wielder;
+    public string Name
+    {
+        get { return name; }
+    }
+    public string Type
+    {
+        get { return "Shield"; }
+    }
 
 
     public void Equip(AnimatorEventManager wielder)
@@ -24,7 +32,7 @@ public class EquippableShield : Pickuppable, IEquippable
         transform.localRotation = Quaternion.identity;
     }
 
-    public void Unequip()
+    public IEquippable Unequip()
     {
         // physics
         gameObject.SetActive(true);
@@ -36,6 +44,7 @@ public class EquippableShield : Pickuppable, IEquippable
         // de-boss
         wielder.states.rpg.currentShield = null;
         wielder = null;
+        return this;
     }
 
     private void Update()

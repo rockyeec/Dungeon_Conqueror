@@ -4,8 +4,11 @@ using UnityEngine;
 
 public interface IEquippable
 {
+    string Name { get; }
+    string Type { get; }
+
     void Equip(AnimatorEventManager wielder);
-    void Unequip();    
+    IEquippable Unequip();    
 }
 
 public interface IAttackable : IEquippable

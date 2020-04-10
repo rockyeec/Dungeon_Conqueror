@@ -122,7 +122,7 @@ public class IKManager : MonoBehaviour
         }
 
         //if ((states.isInAction) && !states.isDodge) // Only IK pitch angle! NOT cardinal facing
-        if ((states.isInAction || animator.GetBool("block")) && !states.isDodge)
+        if ((states.isInAction || animator.GetBool("block") || animator.GetBool("look")) && !states.isDodge)
         {
             if (states.lockon && states.enemyTarget != null)
             {

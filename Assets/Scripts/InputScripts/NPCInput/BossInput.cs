@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class BossInput : EnemyInput
 {
@@ -14,4 +15,11 @@ public class BossInput : EnemyInput
             ui.SetActive(true);
         }
     }
+
+    protected override void InitUI()
+    {
+        ui = ObjectPool.Instance.GetObject("Boss_Canvas(Clone)", transform);
+        text = ui.GetComponentInChildren<TextMeshProUGUI>();
+    }
+
 }

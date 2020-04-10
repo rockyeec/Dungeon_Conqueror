@@ -43,8 +43,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.6811957, y: 0.09199014, z: 0.464441}
-  m_Center: {x: -0.01694947, y: -0.003566078, z: 0.8133826}
+  m_Size: {x: 0.41846347, y: 0.20737353, z: 0.77342165}
+  m_Center: {x: 0.00090127747, y: 0.0035296774, z: 0.6588891}
 --- !u!114 &578308846453027301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d4d1990da90a14e92665af02b5592c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  icon: {fileID: 0}
   rigidBody: {fileID: 0}
   weapon: {fileID: 578308846453027301}
   moveSet:
@@ -355,11 +355,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4847643549659240, guid: f063809a91c6b0248956e054e09b9b56, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4847643549659240, guid: f063809a91c6b0248956e054e09b9b56, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f063809a91c6b0248956e054e09b9b56, type: 3}

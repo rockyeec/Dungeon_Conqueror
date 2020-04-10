@@ -195,6 +195,9 @@ public class InputManager : InputParent
 
     private void SettleWeaponEquipment()
     {
+        if (!Input.GetKeyDown(KeyCode.Z))
+            return;
+
         if (states.rpg.generalStuff.Count != 0)
         {
             IAttackable weapon = states.rpg.generalStuff[0].GetComponent<IAttackable>();
@@ -283,6 +286,8 @@ public class InputManager : InputParent
         return states.rpg.potions[states.potionIndex].Count == 0;
     }
 
+
+    int prevPotionIndex;
     void BrowsePotion()
     {
         if (states.rpg.IsPotionsEmpty())
@@ -328,7 +333,11 @@ public class InputManager : InputParent
             states.potionIndex = (states.potionIndex + 1) % PotionScript.potionTypes.Count;
         }
 
+        if (prevPotionIndex == states.potionIndex)
+            return;
+
         UpdatePotionHUD(states.potionIndex);
+        prevPotionIndex = states.potionIndex;
     }
 
     void UpdatePotionHUD(int index)

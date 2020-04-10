@@ -21979,10 +21979,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Master
       objectReference: {fileID: 0}
+    - target: {fileID: 3846099033445920115, guid: 81aec7ecfb122d34c8d396c8ce75f3d2,
+        type: 3}
+      propertyPath: howManyPerSpawner
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3846099033557902879, guid: 81aec7ecfb122d34c8d396c8ce75f3d2,
+        type: 3}
+      propertyPath: howManyPerSpawner
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3846099033705974836, guid: 81aec7ecfb122d34c8d396c8ce75f3d2,
         type: 3}
       propertyPath: howManyPerSpawner
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3846099033844278113, guid: 81aec7ecfb122d34c8d396c8ce75f3d2,
         type: 3}
@@ -22012,6 +22022,11 @@ PrefabInstance:
     - target: {fileID: 3846099034355171874, guid: 81aec7ecfb122d34c8d396c8ce75f3d2,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3846099034510764396, guid: 81aec7ecfb122d34c8d396c8ce75f3d2,
+        type: 3}
+      propertyPath: howManyPerSpawner
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3846099035345444911, guid: 81aec7ecfb122d34c8d396c8ce75f3d2,

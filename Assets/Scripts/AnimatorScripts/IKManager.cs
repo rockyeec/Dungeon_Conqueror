@@ -42,17 +42,8 @@ public class IKManager : MonoBehaviour
     {
         DoWaistIK();
         DoFootIK();
-
-        //DoMirrorPose();
     }
 
-    private void DoMirrorPose()
-    {
-        if (states.moveAmount != 0)
-            return;
-       animator.SetBool("rightFootForward", animator.pivotWeight == 1 ? true : false);
-        
-    }
 
 
     private void DoFootIK()

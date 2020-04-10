@@ -22,8 +22,8 @@ public class MeshGenerator : MonoBehaviour
         // mygrid initialize
         myGrid = MyGrid.Instance;
         myGrid.Init();
-        xSize = myGrid.gridMaxX;
-        zSize = myGrid.gridMaxZ;
+        xSize = myGrid.gridMaxX / 10;
+        zSize = myGrid.gridMaxZ / 10;
 
         //GetComponent<PathFinding>().FindPath();
 

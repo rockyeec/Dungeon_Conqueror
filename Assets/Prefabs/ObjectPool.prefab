@@ -46,43 +46,43 @@ MonoBehaviour:
   priorityPool:
   - prefab: {fileID: 8084637701146840126, guid: 5cb8a8befd0db074aa7640eb87163c00,
       type: 3}
-    initialAmount: 120
+    initialAmount: 50
   - prefab: {fileID: 762052598100337266, guid: 93a17143fc1fe4c418665552694b70d8, type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 762052598100337266, guid: 1b5f94c41421dff4382a46630f736efa, type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 762052598100337266, guid: 92dc7f40fc6881443affe321729d3c83, type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 762052598100337266, guid: a5129f1d6e20eb5428849103d12f9610, type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 762052598100337266, guid: a044fd411e4ddf147a6bdbfdc78d3277, type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 762052598100337266, guid: c55e166bc72805f4da34512c5ded2e06, type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 6726112655713797247, guid: 59ba38f6db2ccff43b69e491d07824e5,
       type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 3601562488491452117, guid: e024fa74df6bf3d4b88dfa9bc42a8db2,
       type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 3601562488491452117, guid: b4f0ff8e2be0f43429e3b4b9767395b4,
       type: 3}
-    initialAmount: 45
+    initialAmount: 20
   - prefab: {fileID: 3425716048751633901, guid: 6b1ea4e77db669c4f91f56122efab617,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 1558172041554719692, guid: 18e30f037e7e6c24082f4083a235a9a8,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 4865059110613190406, guid: e0ae49babb9c4eb4d8a52a45c643d797,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 7607732034804424821, guid: 8323d81e4d8b3b04d9427949f40eb813,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 3829455274553508654, guid: 17a314bcb1bbfa04698feaa4f485f944,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 2688985095011088961, guid: 9ee3bf7f6772eba488b8d6cb20587d02,
       type: 3}
     initialAmount: 3
@@ -91,25 +91,25 @@ MonoBehaviour:
     initialAmount: 1
   - prefab: {fileID: 8426347736270091636, guid: 75d4a7330992da54196a44472081735c,
       type: 3}
-    initialAmount: 200
+    initialAmount: 100
   - prefab: {fileID: 7534576818650658953, guid: 3719ee132750e7448994401a4d3c0603,
       type: 3}
     initialAmount: 5
   - prefab: {fileID: 8002278734225199442, guid: 6e7d4471359a5f641b1d2bce2bed7a4d,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 7607732034804424821, guid: 749ba66493c35e24fb0069f5a205b1d7,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 4865059110613190406, guid: 016232e357e5e294c959e7b7bf28d436,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 4988467449361623794, guid: e72647b134da9e3419fab6045a58302e,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 1915749751285532407, guid: 9c03107318c3fcb439dee0c2ac125e5e,
       type: 3}
-    initialAmount: 55
+    initialAmount: 33
   - prefab: {fileID: 1369134097715003506, guid: 3282c92f432269d428b3d26b5d0d3544,
       type: 3}
     initialAmount: 1
@@ -119,19 +119,19 @@ MonoBehaviour:
   poolList:
   - prefab: {fileID: 3617972607939732330, guid: 5a335696990b1564a8ac3f8c46e96d29,
       type: 3}
-    initialAmount: 120
+    initialAmount: 55
   - prefab: {fileID: 3617972607939732330, guid: 0c0956d2676b36b49ae9efe8f1770295,
       type: 3}
-    initialAmount: 45
+    initialAmount: 33
   - prefab: {fileID: 3617972607939732330, guid: b52b90d9f6724a84b9087ac45bcf6bb5,
       type: 3}
-    initialAmount: 45
+    initialAmount: 22
   - prefab: {fileID: 3617972607939732330, guid: bc2a1173305abb049bcda4fa2f70fda9,
       type: 3}
-    initialAmount: 225
+    initialAmount: 125
   - prefab: {fileID: 4751566988456248797, guid: 8d23a530b22e30b40a7b4c2c372a05b9,
       type: 3}
-    initialAmount: 225
+    initialAmount: 125
   - prefab: {fileID: 7267377330263380795, guid: 4063efab2574fba42927c697b3cf58cd,
       type: 3}
     initialAmount: 1
@@ -143,16 +143,16 @@ MonoBehaviour:
     initialAmount: 1
   - prefab: {fileID: 5773779560252307953, guid: 212bc3c9c669291459bb2559f7ed40f7,
       type: 3}
-    initialAmount: 33
+    initialAmount: 25
   - prefab: {fileID: 6316920703542370483, guid: 6e7b483b8ef1edf46b28613ecafb0351,
       type: 3}
-    initialAmount: 33
+    initialAmount: 25
   - prefab: {fileID: 5773779560252307953, guid: da46f0c165d7f75428e6fbf256246a18,
       type: 3}
-    initialAmount: 33
+    initialAmount: 25
   - prefab: {fileID: 5773779560252307953, guid: 1a1a86157ae099c43a3316694159735d,
       type: 3}
-    initialAmount: 33
+    initialAmount: 25
   - prefab: {fileID: 5773779560252307953, guid: 39a8537ff5cd39b46bd6b934f59660f6,
       type: 3}
     initialAmount: 1

@@ -59,7 +59,7 @@ public class AnimatorEventManager : MonoBehaviour
         this.states.OnDrink += States_OnDrink;
 
 
-        if (states.name != "Controller Warrior(Clone)" || states.name != "Controller Archer(Clone)" || states.name != "Controller Mage(Clone)")
+        if (states.name != "Controller Warrior(Clone)" && states.name != "Controller Archer(Clone)" && states.name != "Controller Mage(Clone)")
             return;
 
         commandCursor = ObjectPool.Instance.GetObject("Command Object(Clone)", body).transform;

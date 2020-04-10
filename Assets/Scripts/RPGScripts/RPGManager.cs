@@ -178,8 +178,8 @@ public class RPGManager : MonoBehaviour
             experience.cur %= experience.max;
             UpdateStatsAccordingToLevel(++level);
             OnLevelUp();
+            experience.max += 5f; // increase by 1%
         }
-        experience.max *= 1.01f; // increase by 1%
         experience.UpdateBars();
     }
 

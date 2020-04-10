@@ -61,13 +61,13 @@ public class GameMasterScript : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
 
-        if (characterClass == MenuScript.CharacterClass.ARCHER)
+        if (characterClass == MenuScript.CharacterClass.WARRIOR)
         {
-            audioSource.PlayOneShot(levelUpF);
+            audioSource.PlayOneShot(levelUpM);
         }
         else
         {
-            audioSource.PlayOneShot(levelUpM);
+            audioSource.PlayOneShot(levelUpF);
         }
     }
 

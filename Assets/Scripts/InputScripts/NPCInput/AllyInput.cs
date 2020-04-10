@@ -134,6 +134,7 @@ public class AllyInput : NPCInput
     {
         if (collision.collider.gameObject.layer == states.aem.friendlyLayer)
         {
+            allyStopDistance = UnityEngine.Random.Range(2.22f, 3.88f);
             curFriend = collision.transform;
             //path.Clear();
 

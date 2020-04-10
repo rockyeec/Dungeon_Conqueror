@@ -107,7 +107,7 @@ public class NPCInput : InputParent
         ui.SetActive(true);
         states.rpg.health.UpdateBars();
         states.rpg.stamina.UpdateBars();
-        yield return new WaitForSeconds(0.88f);
+        yield return new WaitForSeconds(1f);
         ui.SetActive(false);
     }
 
@@ -117,7 +117,7 @@ public class NPCInput : InputParent
         states.lookPosition = states.aem.head.position + transform.forward;
         while (!states.lockon)
         {
-            yield return new WaitForSeconds(0.45f);
+            yield return new WaitForSeconds(1.55f);
 
             GetEnemyTarget();
         }
@@ -127,7 +127,7 @@ public class NPCInput : InputParent
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.8f);
+            yield return new WaitForSeconds(1.55f);
 
             if (TargetDestination == null)
                 continue;
